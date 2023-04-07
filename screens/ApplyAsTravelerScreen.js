@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,31 +7,30 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
+  Modal,
   Linking,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import countriesData from '../data/countriesData.json';
+import * as DocumentPicker from 'expo-document-picker';
 
-const RegisterScreen = () => {
+const ApplyAsTravelerScreen = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [password, setPassword] = useState('');
   const [gender, setGender] = useState('');
   const [email, setEmail] = useState('');
-  const [city, setCity] = useState('');
-  const [building, setBuilding] = useState('');
   const [agreement, setAgreement] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
   const [isValidEmail, setIsValidEmail] = useState(true);
-  const [isValidPassword, setIsValidPassword] = useState(true);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const [cvUri, setCvUri] = useState('');
+  const [idUri, setIdUri] = useState('');
+  const [cvName, setCvName] = useState('');
+  const [idName, setIdName] = useState('');
+
   
-
-  const handleTogglePasswordVisibility = () => {
-    setIsPasswordVisible(!isPasswordVisible);
-  };
-
   const navigation = useNavigation();
 
   function onBackPressed(){
@@ -50,7 +49,6 @@ const RegisterScreen = () => {
     //If the code reached here, it means that the form is valid
     //Backend developer, your code goes here :)
     //We will later add the "Application Submitted" screen, after you add the backend code
-
   };
 
   const fieldsEmpty = () => {
@@ -69,26 +67,27 @@ const RegisterScreen = () => {
       Alert.alert('Invalid Gender', 'Please enter your Gender.');
       return true;
     }
-    // Validate City
-    if (!city){
-      Alert.alert('Invalid City', 'Please enter your City.');
-      return true;
-    }
-    // Validate Building
-    if (!building){
-      Alert.alert('Invalid Building', 'Please enter your Building.');
-      return true;
-    }
     // Validate Agreement
     if (!agreement){
       Alert.alert('Agreement Error', 'Please agree to the terms and conditions.');
       return true;
     }
-    // Validate password
-    if (!password || !isValidPassword) {
-      Alert.alert('Invalid Password', 'Please enter a password.');
+    // Validate nationality
+    if (!selectedCountry){
+      Alert.alert('Invalid Nationality', 'Please enter your nationality.');
       return true;
     }
+    // Validate CV
+    if (!cvUri || !cvName){
+      Alert.alert('Invalid CV', 'Please upload your CV.');
+      return true;
+    }
+    // Validate ID
+    if (!idUri || !idName){
+      Alert.alert('Invalid ID', 'Please upload your ID.');
+      return true;
+    }
+    
     return false;
   };
 
@@ -134,24 +133,61 @@ const RegisterScreen = () => {
     Linking.openURL('https://www.example.com/main-services-agreement');
   };
 
-  const validatePassword = () => {
-    // Define the regex pattern for password validation
-    
+  const scrollViewRef = useRef(); // Ref for ScrollView
 
-    const regexPattern = /^(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).{8,}$/;
-    
-    // Test the password against the regex pattern
-    const isValid = regexPattern.test(password);
-    // Update the state
-    setIsValidPassword(isValid);
+  const handleCountryChange = (country) => {
+    setSelectedCountry(country);
+    setModalVisible(false);
   };
-  
-  
 
+  
+  _pickCv = async () => {
+    // used to pick cv from the device
+      try{
+        let result = await DocumentPicker.getDocumentAsync({ 
+        copyToCacheDirectory: true,
+        type: "application/pdf"
+      });
+
+      setCvName(result.name);
+      setCvUri(result.uri);
+      
+      // alert(cvUri);
+      // console.log(cvUri);
+      }
+      catch(e){
+        console.log(e);
+        return;
+      }
+    
+    }
+
+    _pickId = async () => {
+      // used to pick id from the device
+        try{
+          let result = await DocumentPicker.getDocumentAsync({ 
+          copyToCacheDirectory: true,
+          type: "application/pdf",
+        });
+        
+        setIdName(result.name);
+        setIdUri(result.uri);
+
+        // alert(idUri);
+        // console.log(idUri);
+        }
+        catch(e){
+          console.log(e);
+          return;
+        }
+      
+      }
+    
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Register</Text>
+      <Text style={styles.title}>Apply as a Traveler</Text>
 
       <View style={styles.form}>
         <TextInput
@@ -188,6 +224,41 @@ const RegisterScreen = () => {
             <Text style={styles.genderButtonText}>F</Text>
           </TouchableOpacity>
         </View>
+        
+        <View style={styles.countryContainer}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => setModalVisible(true)}
+      >
+        <Text style={styles.buttonText}>
+          {selectedCountry ? selectedCountry : "Select Your Nationality"}
+        </Text>
+      </TouchableOpacity>
+
+      <Modal
+        visible={modalVisible}
+        animationType="slide"
+        transparent={true}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            {/* Pass the ref to ScrollView */}
+            <ScrollView ref={scrollViewRef}>
+              {countriesData.map((country) => (
+                <TouchableOpacity
+                  key={country.code}
+                  style={styles.countryItem}
+                  onPress={() => handleCountryChange(country.name)}
+                >
+                  <Text style={styles.countryText}>{country.name}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+    </View>
 
           <TextInput
             placeholder="Email"
@@ -199,34 +270,6 @@ const RegisterScreen = () => {
           />
           {!isValidEmail && <Text style={styles.errorTextEmail}>    Please enter a valid email address</Text>}
         
-        
-
-            
-              <View style={styles2.passwordContainer}>
-                <TextInput
-                  style={[styles2.input, !isValidPassword && styles.inputError]}
-                  secureTextEntry={!isPasswordVisible}
-                  placeholder="Password"
-                  value={password}
-                  onChangeText={(text) => {setPassword(text); validatePassword}}
-                  onBlur={validatePassword}
-                />
-                <TouchableOpacity
-                  style={styles2.eyeIconContainer}
-                  onPress={handleTogglePasswordVisibility}
-                >
-                  <Icon
-                    name={isPasswordVisible ? 'eye-slash' : 'eye'}
-                    size={20}
-                    color="black"
-                  />
-                </TouchableOpacity>
-              </View>
-          
-          {!isValidPassword && <Text style={styles.errorText}>{'\t\t'}Please enter a strong password (length: 8+, {'\n\t\t'}contains uppercase and lowercase letters, {'\n\t\t'}digits, and a special character)</Text>}
-
-         
-
         <View style={styles.container}>
               <TextInput
                 placeholder="Phone Number"
@@ -239,23 +282,18 @@ const RegisterScreen = () => {
               {!isValidPhoneNumber && <Text style={styles.errorText}>Please enter a valid Lebanese phone number</Text>}
               
         </View>
-        <Text style={styles.countryText}>Lebanon</Text>
-          
-          
-        <TextInput
-          placeholder="City"
-          style={styles.input}
-          value={city}
-          onChangeText={setCity}
-          maxLength={20}
-        />
-        <TextInput
-          placeholder="Building"
-          style={styles.input}
-          value={building}
-          onChangeText={setBuilding}
-          maxLength={100}
-        />
+        
+        
+        <View style={styles.uploadContainer}>
+          <TouchableOpacity style={styles.uploadButton} onPress={this._pickCv}>
+            <Text style={styles.uploadButtonText}>Select CV as pdf</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.uploadButton} onPress={this._pickId}>
+            <Text style={styles.uploadButtonText}>Select ID as pdf</Text>
+          </TouchableOpacity>
+        </View>
+
+      
 
         <View style={styles.agreementContainer}>
           <TouchableOpacity
@@ -277,9 +315,9 @@ const RegisterScreen = () => {
         </View>
 
         <TouchableOpacity
-          style={styles.registerButton}
+          style={styles.applyButton}
           onPress={handleRegister}>
-          <Text style={styles.registerButtonText}>Register</Text>
+          <Text style={styles.applyButtonText}>Apply</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -361,14 +399,14 @@ const styles = StyleSheet.create({
     agreementText: {
       color: '#666',
     },
-    registerButton: {
+    applyButton: {
       backgroundColor: '#3274cb',
       paddingVertical: 10,
       borderRadius: 5,
       alignItems: 'center',
       justifyContent: 'center',
     },
-    registerButtonText: {
+    applyButtonText: {
       color: '#fff',
       fontSize: 18,
       fontWeight: 'bold',
@@ -422,48 +460,62 @@ const styles = StyleSheet.create({
     urlText: {
       marginTop: 10, // Add margin to separate URL from text
     },
-    passwordContainer: {
-      flexDirection: 'row', // Make sure the text input and icon are in a row
-      width: '100%', // Take up full width of the container
-      paddingHorizontal: 16, // Add horizontal padding for spacing
+    countryContainer: {
+      marginVertical: 10,
+      marginHorizontal: 20,
     },
-    eyeIconContainer: {
-      marginLeft: 10,
+    button: {
+      backgroundColor: '#ebebeb',
+      borderRadius: 5,
+      padding: 10,
+      alignItems: 'center',
+    },
+    buttonText: {
+      fontSize: 16,
+    },
+    modalContainer: {
+      flex: 1,
       justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0,0,0,0.5)',
     },
-  });
-
-  const styles2 = StyleSheet.create({
-    //styles for password input
-    passwordContainer: {
-      flexDirection: 'row', // Make sure the text input and icon are in a row
-      alignItems: 'center', // Align items vertically in the center
-      width: '100%', // Take up full width of the container
-      paddingHorizontal: 0, // Add horizontal padding for spacing
-    },
-    input: {
-      flex: 1, // Take up remaining space in the row
-      height: 50, // Set desired height for the text input
-      borderColor: 'black',
-      borderWidth: 1,
+    modalContent: {
+      backgroundColor: '#fff',
       borderRadius: 5,
-      paddingHorizontal: 10, // Add horizontal padding for spacing
-      ///
-      borderColor: '#ccc',
-      borderRadius: 5,
-      marginBottom: 10,
+      padding: 20,
+      minWidth: 200,
+      maxWidth: 300,
     },
-    inputError: {
-      borderColor: 'red', // Update border color for invalid password
+    countryItem: {
+      paddingVertical: 10,
     },
-    eyeIconContainer: {
-      marginLeft: 10, // Add left margin for spacing between text input and icon
-      marginBottom: 10,
+    countryText: {
+      fontSize: 16,
+    },
+    uploadContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginHorizontal: 16,
+    },
+    uploadButton: {
+      width: 100,
+      height: 100,
+      backgroundColor: '#3274cb',
+      borderRadius: 8,
+      marginHorizontal: 5,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    uploadButtonText: {
+      color: 'white',
+      fontSize: 15,
+      fontWeight: 'bold',
+      textAlign: 'center',
     },
   });
   
-  
-  export default RegisterScreen;
+  export default ApplyAsTravelerScreen;
 
 
 

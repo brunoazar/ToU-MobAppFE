@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from './screens/SplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import ApplyAsTravelerScreen from './screens/ApplyAsTravelerScreen';
 import { NavigationContainer } from '@react-navigation/native';
 
 const Stack = createStackNavigator();
@@ -27,6 +28,11 @@ export default function App() {
         <Stack.Screen
           name="RegisterScreen"
           component={RegisterScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ApplyAsTravelerScreen"
+          component={ApplyAsTravelerScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

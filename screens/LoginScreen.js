@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  Linking,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import RegisterScreen from './RegisterScreen';
@@ -20,6 +21,10 @@ const LoginScreen = () => {
       navigation.navigate("RegisterScreen");
   }
 
+  function navigateToApply() {
+    navigation.navigate("ApplyAsTravelerScreen");
+}
+
   ////
   const handleLogin = async () => {
     // Validate email format
@@ -30,6 +35,7 @@ const LoginScreen = () => {
     }
   
     try {
+      //backend code for login
       const response = await fetch('https://example.com/api/login', {
         method: 'POST',
         headers: {
@@ -68,7 +74,7 @@ const LoginScreen = () => {
   ///
 
   const handleApply = () => {
-    // TODO: implement apply logic
+    navigateToApply()
   };
 
   const handleSignUp = () => {

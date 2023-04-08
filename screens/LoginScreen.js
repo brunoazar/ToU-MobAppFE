@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Platform, StatusBar} from 'react-native';
 import {
   View,
   Text,
@@ -11,6 +12,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import RegisterScreen from './RegisterScreen';
 import ApplyAsTravelerScreen from './ApplyAsTravelerScreen';
+import PasteLinkScreen from './Client Screens/PasteLinkScreen';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -34,29 +36,39 @@ const LoginScreen = () => {
       Alert.alert('Invalid Email', 'Please enter a valid email address.');
       return;
     }
-  
-    try {
-      //backend code for login
-      const response = await fetch('https://example.com/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to login');
-      }
-  
-      // TODO: handle successful login using checkLogin function below
-    } catch (error) {
-      console.log(error);
-      // TODO: handle login error using checkLogin function below
+    // validate password
+    if(!password){
+      Alert.alert('Invalid Password', 'Please enter a password.');
+      return;
     }
+  
+    // try {
+    //   //backend code for login
+    //   const response = await fetch('https://example.com/api/login', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({
+    //       email,
+    //       password,
+    //     }),
+    //   });
+  
+    //   if (!response.ok) {
+    //     throw new Error('Failed to login');
+    //   }
+  
+    //   // TODO: handle successful login using checkLogin function below
+    // } catch (error) {
+    //   console.log(error);
+    //   // TODO: handle login error using checkLogin function below
+    // }
+
+
+    //JUST FOR TESTING
+    navigation.navigate("PasteLinkScreen");
+    //JUST FOR TESTING
   };
 
   const checkLogin = (responseCode, userType) => {
@@ -146,6 +158,7 @@ const LoginScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 ,
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',

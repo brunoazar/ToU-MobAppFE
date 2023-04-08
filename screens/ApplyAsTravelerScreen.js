@@ -1,4 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
+import { Platform, StatusBar} from 'react-native';
 import {
   View,
   Text,
@@ -333,6 +334,7 @@ const ApplyAsTravelerScreen = () => {
 
 const styles = StyleSheet.create({
     container: {
+      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 ,
       flexGrow: 1,
       alignItems: 'center',
       backgroundColor: '#fff',

@@ -7,6 +7,16 @@ import SplashScreen from './screens/SplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ApplyAsTravelerScreen from './screens/ApplyAsTravelerScreen';
+import SettingsScreen from './screens/SettingsScreen';
+import SupportScreen from './screens/SupportScreen';
+
+
+import PasteLinkScreen from './screens/Client Screens/PasteLinkScreen';
+import ActiveOrdersScreen from './screens/Client Screens/ActiveOrdersScreen';
+import PendingOrdersScreen from './screens/Client Screens/PendingOrdersScreen';
+import ProductPage  from './screens/Client Screens/ProductPage';
+
+
 import { NavigationContainer } from '@react-navigation/native';
 
 const Stack = createStackNavigator();
@@ -33,6 +43,36 @@ export default function App() {
         <Stack.Screen
           name="ApplyAsTravelerScreen"
           component={ApplyAsTravelerScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="PasteLinkScreen"
+          component={PasteLinkScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ActiveOrdersScreen"
+          component={ActiveOrdersScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="PendingOrdersScreen"
+          component={PendingOrdersScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SettingsScreen"
+          component={SettingsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SupportScreen"
+          component={SupportScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ProductPage"
+          component={ProductPage}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

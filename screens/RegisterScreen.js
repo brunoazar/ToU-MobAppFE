@@ -49,8 +49,18 @@ const RegisterScreen = () => {
     };
     //If the code reached here, it means that the form is valid
     //Backend developer, your code goes here :)
-    //We will later add the "Application Submitted" screen, after you add the backend code
+    
+  };
 
+  const checkRegistration = (responseCode, userType) => {
+    // Handle registration logic here
+    if(responseCode == 200){
+      Alert.alert('Registration Successful', 'Keep an eye out on your email junk/spam folder.');
+      navigation.navigate("LoginScreen");
+      
+    }else{
+      Alert.alert('Registration Failed');
+    }
   };
 
   const fieldsEmpty = () => {

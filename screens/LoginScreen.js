@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import RegisterScreen from './RegisterScreen';
+import ApplyAsTravelerScreen from './ApplyAsTravelerScreen';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -51,14 +52,30 @@ const LoginScreen = () => {
         throw new Error('Failed to login');
       }
   
-      // TODO: handle successful login
+      // TODO: handle successful login using checkLogin function below
     } catch (error) {
       console.log(error);
-      // TODO: handle login error
+      // TODO: handle login error using checkLogin function below
+    }
+  };
+
+  const checkLogin = (responseCode, userType) => {
+    // Handle login logic here
+    if(responseCode == 200){
+      Alert.alert('Login Successful');
+      if(userType == 'traveler'){
+        navigation.navigate("TravelerMainScreen");
+      }else{
+        navigation.navigate("PasteLinkScreen");
+      }
+    }else{
+      Alert.alert('Login Failed');
     }
   };
   
-  ////
+  
+  
+      ////
   const handlePress = () => {
     Linking.openURL('https://example.com/forgot-password');
   };

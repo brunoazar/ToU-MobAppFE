@@ -48,7 +48,20 @@ const ApplyAsTravelerScreen = () => {
     };
     //If the code reached here, it means that the form is valid
     //Backend developer, your code goes here :)
-    //We will later add the "Application Submitted" screen, after you add the backend code
+    //use const checkApplication to handle the response
+  };
+
+  const checkApplication = (responseCode) => {
+    // Handle application logic here
+    if (responseCode === 200) {
+      // Application submitted successfully
+      Alert.alert('Application Submitted', 'Your application has been submitted successfully, keep an eye on your email junk/spam folder.');
+      navigation.navigate('LoginScreen');
+    } else {
+      // Application submission failed
+      Alert.alert('Application Failed', 'Your application has failed to submit, please try again.');
+      navigation.navigate('LoginScreen');
+    }
   };
 
   const fieldsEmpty = () => {
@@ -151,9 +164,6 @@ const ApplyAsTravelerScreen = () => {
 
       setCvName(result.name);
       setCvUri(result.uri);
-      
-      // alert(cvUri);
-      // console.log(cvUri);
       }
       catch(e){
         console.log(e);
@@ -172,9 +182,6 @@ const ApplyAsTravelerScreen = () => {
         
         setIdName(result.name);
         setIdUri(result.uri);
-
-        // alert(idUri);
-        // console.log(idUri);
         }
         catch(e){
           console.log(e);
@@ -286,10 +293,10 @@ const ApplyAsTravelerScreen = () => {
         
         <View style={styles.uploadContainer}>
           <TouchableOpacity style={styles.uploadButton} onPress={this._pickCv}>
-            <Text style={styles.uploadButtonText}>Select CV as pdf</Text>
+            <Text style={styles.uploadButtonText}>Upload CV as pdf</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.uploadButton} onPress={this._pickId}>
-            <Text style={styles.uploadButtonText}>Select ID as pdf</Text>
+            <Text style={styles.uploadButtonText}>Upload ID as pdf</Text>
           </TouchableOpacity>
         </View>
 
@@ -451,7 +458,7 @@ const styles = StyleSheet.create({
       alignItems: 'center', // Vertically align text in the middle
     },
     agreementText: {
-      // Your styles for the main text here
+      
     },
     linkText: {
       color: 'blue', // Change to your desired link color

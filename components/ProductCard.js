@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ navigation, product }) => {
   const { imageSource, url, title, price, id, dimensions, inStock } = product;
 
   // Variables for remaining details

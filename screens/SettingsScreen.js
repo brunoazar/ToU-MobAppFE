@@ -1,8 +1,13 @@
 import React from 'react';
 import { Platform, StatusBar} from 'react-native';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useRoute } from '@react-navigation/native';
 
-const SettingsScreen = () => {
+const SettingsScreen = ({ navigation}) => {
+  const route = useRoute();
+  const email = route.params.email;
+
+
   // Function to handle settings item click
   const handleSettingsItemClick = (item) => {
     // Perform action based on selected item

@@ -67,7 +67,7 @@ const LoginScreen = () => {
 
 
     //JUST FOR TESTING
-    navigation.navigate("PasteLinkScreen");
+    navigation.navigate("PasteLinkScreen", { email: email });
     //JUST FOR TESTING
   };
 
@@ -76,9 +76,9 @@ const LoginScreen = () => {
     if(responseCode == 200){
       Alert.alert('Login Successful');
       if(userType == 'traveler'){
-        navigation.navigate("TravelerMainScreen");
+        navigation.navigate("TravelerMainScreen", { email: email });
       }else{
-        navigation.navigate("PasteLinkScreen");
+        navigation.navigate("PasteLinkScreen", { email: email });
       }
     }else{
       Alert.alert('Login Failed');

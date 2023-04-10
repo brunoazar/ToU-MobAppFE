@@ -1,12 +1,15 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { useRoute } from '@react-navigation/native';
+import { Platform, StatusBar} from 'react-native';
 
-const PendingOrdersScreen = ({ orders }) => {
-  
+const PendingOrdersScreen = ({ navigation }) => {
+  const route = useRoute();
+  const email = route.params.email;
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Active Orders</Text>
+      <Text style={styles.header}>Pending Orders</Text>
       
     </View>
   );
@@ -14,6 +17,7 @@ const PendingOrdersScreen = ({ orders }) => {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 ,
     flex: 1,
     backgroundColor: '#fff',
     padding: 16,

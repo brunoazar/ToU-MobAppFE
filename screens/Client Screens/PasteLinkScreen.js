@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Linking, Alert, Image } from 'react-native';
 import ProductPage from './ProductPage';
 import { Platform, StatusBar} from 'react-native';
-import BottomNav from '../../components/BottomNav'; 
-
-import { useNavigation } from '@react-navigation/native';
-
+import BottomNav from '../../components/BottomNav'; // Import the bottom navigation component
+import { useRoute } from '@react-navigation/native';
 
 const PasteLinkScreen = ({ navigation }) => {
   const [link, setLink] = useState('');
-
   
+  const route = useRoute();
+  const email = route.params.email;
 
   // Example JSON object representing product details
   const product = {
@@ -26,7 +25,7 @@ const PasteLinkScreen = ({ navigation }) => {
   const handleCheckProduct = () => {
     //Validate the link
     if (!isValidUrl(link)) {
-      Alert.alert('Invalid URL', 'Please enter a valid URL');
+      Alert.alert('Invalid URL', 'Please enter a valid amazon URL');
       return;
     }
 
@@ -35,13 +34,13 @@ const PasteLinkScreen = ({ navigation }) => {
     // For now, we will just redirect to the product page for testing purposes
 
     // JUST FOR TESTING
-    navigation.navigate('ProductPage', { product }); // Redirect to the product page with the product details
+    navigation.navigate('ProductPage', { product: product, email: email }); // Redirect to the product page with the product details
     // JUST FOR TESTING
   }
 
   const isValidUrl = (url) => {
-    // Simple URL validation using regular expression
-    const pattern = /^https?:\/\/(?:www\.)?amazon\.com\/(?:dp|gp\/product)\/[A-Za-z0-9]{10}(?:\/|$)/;
+    // amazon URL validation using regular expression
+    const pattern = /^https?:\/\/(?:www\.)?amazon\.com\/(?:[^/]+\/)*?(?:dp|gp\/product)\/[A-Za-z0-9]{10}(?:\/[^?#]*|$)/;
     return pattern.test(url);
   }
 
@@ -57,7 +56,7 @@ const PasteLinkScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.button} onPress={handleCheckProduct}>
         <Text style={styles.buttonText}>Check Product</Text>
       </TouchableOpacity>
-      <BottomNav />
+      <BottomNav navigation={navigation} email={email}/>
        
 
     </View>

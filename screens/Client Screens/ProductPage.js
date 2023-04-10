@@ -1,12 +1,17 @@
 import React, { useState} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import ProductCard from '../../components/ProductCard'; // Import the ProductCard component
+//import useRoute:
+import { useRoute } from '@react-navigation/native';
 
-const ProductPage = ({ navigation, route }) => {
+const ProductPage = ({ navigation }) => {
     const [quantity, setQuantity] = useState(1); // State variable to store the quantity of the product [1 by default]
-  
+
+    const route = useRoute(); // Use the useRoute hook to access the route object
+
     // Extract the product object from the navigation parameters
-    const { product } = route.params;
+    const product = route.params.product;
+    const email = route.params.email;
 
      // Function to handle "Request Product" button press
     const handleRequestProduct = () => {

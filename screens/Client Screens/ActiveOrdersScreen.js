@@ -1,8 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { useRoute } from '@react-navigation/native';
+import { Platform, StatusBar} from 'react-native';
 
-const ActiveOrdersScreen = ({ orders }) => {
-  
+const ActiveOrdersScreen = ({ navigation }) => {
+  const route = useRoute();
+  const email = route.params.email;
 
   return (
     <View style={styles.container}>
@@ -14,6 +17,7 @@ const ActiveOrdersScreen = ({ orders }) => {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 ,
     flex: 1,
     backgroundColor: '#fff',
     padding: 16,

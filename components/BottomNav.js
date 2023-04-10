@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Linking, Alert, Image } from 'react-native';
-
+import { useRoute } from '@react-navigation/native';
 
 //for navigation:
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -8,12 +8,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation  } from '@react-navigation/native';
 
 
-const BottomNav = () => {
-  const navigation = useNavigation();
+const BottomNav = ({navigation, email}) => {
 
+  route = useRoute();
+  //const email = route.params.email;
+  
   // Function to handle navigation to different screens
   const handleNavigation = (screenName) => {
-    navigation.navigate(screenName);
+    navigation.navigate(screenName, { email: email });
   };
 
   return (

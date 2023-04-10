@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { useRoute } from '@react-navigation/native';
 
-const SupportScreen = ({ orders }) => {
-  
+const SupportScreen = ({ navigation }) => {
+  const route = useRoute();
+  const email = route.params.email;
 
   return (
     <View style={styles.container}>

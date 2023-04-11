@@ -11,10 +11,10 @@ import SettingsScreen from './screens/SettingsScreen';
 import SupportScreen from './screens/SupportScreen';
 
 
-import PasteLinkScreen from './screens/Client Screens/PasteLinkScreen';
-import ActiveOrdersScreen from './screens/Client Screens/ActiveOrdersScreen';
-import PendingOrdersScreen from './screens/Client Screens/PendingOrdersScreen';
-import ProductPage  from './screens/Client Screens/ProductPage';
+import PasteLinkScreen from './screens/ClientScreens/PasteLinkScreen';
+import ActiveOrdersScreen from './screens/ClientScreens/ActiveOrdersScreen';
+import PendingOrdersScreen from './screens/ClientScreens/PendingOrdersScreen';
+import ProductPage  from './screens/ClientScreens/ProductPage';
 
 
 import { NavigationContainer } from '@react-navigation/native';

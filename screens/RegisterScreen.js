@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Platform, StatusBar} from 'react-native';
+import React, { useState, useRef } from 'react';
+import { Platform, StatusBar, Modal} from 'react-native';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import lbCities from '../data/lbCities.json';
 
 const RegisterScreen = () => {
   const [firstName, setFirstName] = useState('');
@@ -20,13 +21,13 @@ const RegisterScreen = () => {
   const [gender, setGender] = useState('');
   const [email, setEmail] = useState('');
   const [city, setCity] = useState('');
-  const [building, setBuilding] = useState('');
   const [agreement, setAgreement] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [isValidPassword, setIsValidPassword] = useState(true);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   
 
   const handleTogglePasswordVisibility = () => {
@@ -83,11 +84,6 @@ const RegisterScreen = () => {
     // Validate City
     if (!city){
       Alert.alert('Invalid City', 'Please enter your City.');
-      return true;
-    }
-    // Validate Building
-    if (!building){
-      Alert.alert('Invalid Building', 'Please enter your Building.');
       return true;
     }
     // Validate Agreement
@@ -157,7 +153,12 @@ const RegisterScreen = () => {
     setIsValidPassword(isValid);
   };
   
-  
+  const scrollViewRef = useRef(); // Ref for ScrollView
+
+  const handleCityChange = (city) => {
+    setCity(city);
+    setModalVisible(false);
+  };
 
 
   return (
@@ -247,26 +248,44 @@ const RegisterScreen = () => {
                 keyboardType="phone-pad"
                 onBlur={validatePhoneNumber}
               />
-              {!isValidPhoneNumber && <Text style={styles.errorText}>Please enter a valid Lebanese phone number</Text>}
+              {!isValidPhoneNumber && <Text style={styles.errorText}>Please enter a valid phone number</Text>}
               
         </View>
         <Text style={styles.countryText}>Lebanon</Text>
           
           
-        <TextInput
-          placeholder="City"
-          style={styles.input}
-          value={city}
-          onChangeText={setCity}
-          maxLength={20}
-        />
-        <TextInput
-          placeholder="Building"
-          style={styles.input}
-          value={building}
-          onChangeText={setBuilding}
-          maxLength={100}
-        />
+        <View style={styles.cityContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setModalVisible(true)}
+          >
+            <Text style={styles.buttonText}>
+              {city ? city : "Select Your City"}
+            </Text>
+          </TouchableOpacity>
+
+          <Modal
+            visible={modalVisible}
+            animationType="slide"
+            transparent={true}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                {/* Pass the ref to ScrollView */}
+                <ScrollView ref={scrollViewRef}>
+                  {lbCities.map((city) => (
+                    <TouchableOpacity
+                      style={styles.cityItem}
+                      onPress={() => handleCityChange(city.city)}
+                    >
+                      <Text style={styles.countryText}>{city.city}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+            </View>
+          </Modal>
+        </View>
 
         <View style={styles.agreementContainer}>
           <TouchableOpacity
@@ -443,6 +462,35 @@ const styles = StyleSheet.create({
       marginLeft: 10,
       justifyContent: 'center',
     },
+    modalContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    modalContent: {
+      backgroundColor: '#fff',
+      borderRadius: 5,
+      padding: 20,
+      minWidth: 200,
+      maxWidth: 300,
+    },
+    cityItem: {
+      paddingVertical: 10,
+    },
+    cityText: {
+      fontSize: 16,
+    },
+    cityContainer: {
+      marginVertical: 10,
+      marginHorizontal: 20,
+    },
+    button: {
+      backgroundColor: '#ebebeb',
+      borderRadius: 5,
+      padding: 10,
+      alignItems: 'center',
+    },
   });
 
   const styles2 = StyleSheet.create({
@@ -471,6 +519,10 @@ const styles = StyleSheet.create({
     eyeIconContainer: {
       marginLeft: 10, // Add left margin for spacing between text input and icon
       marginBottom: 10,
+    },
+    
+    buttonText: {
+      fontSize: 16,
     },
   });
   

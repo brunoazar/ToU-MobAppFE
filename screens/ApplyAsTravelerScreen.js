@@ -287,7 +287,7 @@ const ApplyAsTravelerScreen = () => {
                 keyboardType="phone-pad"
                 onBlur={validatePhoneNumber}
               />
-              {!isValidPhoneNumber && <Text style={styles.errorText}>Please enter a valid Lebanese phone number</Text>}
+              {!isValidPhoneNumber && <Text style={styles.errorText}>Please enter a valid phone number</Text>}
               
         </View>
         

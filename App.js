@@ -1,5 +1,4 @@
 import 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -7,7 +6,6 @@ import SplashScreen from './screens/SplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ApplyAsTravelerScreen from './screens/ApplyAsTravelerScreen';
-import SettingsScreen from './screens/SettingsScreen';
 import SupportScreen from './screens/SupportScreen';
 
 
@@ -15,6 +13,7 @@ import PasteLinkScreen from './screens/ClientScreens/PasteLinkScreen';
 import ActiveOrdersScreen from './screens/ClientScreens/ActiveOrdersScreen';
 import PendingOrdersScreen from './screens/ClientScreens/PendingOrdersScreen';
 import ProductPage  from './screens/ClientScreens/ProductPage';
+import SettingsScreen from './screens/ClientSettingsScreen';
 
 
 import { NavigationContainer } from '@react-navigation/native';

@@ -1,15 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { Platform, StatusBar} from 'react-native';
 import ActiveOrderCard from '../../components/ActiveOrderCard';
+
+// importing fake data for testing
+import activeProducts from '../../fake_data/activeProducts';
 
 const ActiveOrdersScreen = ({ navigation }) => {
   const route = useRoute();
   const email = route.params.email;
 
   //get list of json product objects from server (pending orders)
-  const products = [];
+  // Backend API call to get active orders
+  //const products = [];
 
   // Render each product as a ActiveOrderCard component
   const renderProduct = ({ item }) => <ActiveOrderCard product={item} />;
@@ -18,9 +22,9 @@ const ActiveOrdersScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.header}>Active Orders</Text>
       <FlatList
-        data={products}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => `${item.id}-${index}`}
+        data={activeProducts} // replace with actual active orders
+        renderItem={renderProduct}
+        keyExtractor={(item) => item.id.toString()}
       />
     </View>
   );
@@ -37,6 +41,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
+    color: '#3274cb',
+    textAlign: 'center',
   },
 });
 

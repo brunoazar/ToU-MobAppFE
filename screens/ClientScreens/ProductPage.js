@@ -32,7 +32,7 @@ const ProductPage = ({ navigation }) => {
     const handleCancelProduct = () => {
         Alert.alert('Product Request Cancelled', 'Your request has been cancelled');
         //navigate to pastelinkscreen
-        navigation.navigate('PasteLinkScreen');
+        navigation.navigate('PasteLinkScreen', { email: email });
         return;
     };
 

@@ -1,8 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { Platform, StatusBar} from 'react-native';
 import PendingOrderCard from '../../components/PendingOrderCard';
+
+//importing fake data for testing
+import pendingProducts from '../../fake_data/pendingProducts'
 
 const PendingOrdersScreen = ({ navigation }) => {
   const route = useRoute();
@@ -11,6 +14,9 @@ const PendingOrdersScreen = ({ navigation }) => {
   //get list of json product objects from server (pending orders)
   const products = [];
 
+  //fake data for testing
+  //products = pedningProducts;
+
   // Render each product as a PendingOrderCard component
   const renderProduct = ({ item }) => <PendingOrderCard product={item} />;
 
@@ -18,7 +24,7 @@ const PendingOrdersScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.header}>Pending Orders</Text>
       <FlatList
-        data={products}
+        data={pendingProducts} // replace with actual pending orders
         renderItem={renderProduct}
         keyExtractor={(item) => item.id.toString()}
       />
@@ -37,6 +43,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
+    color: '#3274cb',
+    textAlign: 'center',
   },
 });
 

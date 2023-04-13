@@ -15,8 +15,29 @@ const ActiveOrderCard = ({ product }) => {
     return (
       <View style={styles.timelineContainer}>
         {stages.map((stage, index) => (
-          <View key={stage} style={[styles.timelineStage, index + 1 <= status ? { backgroundColor: primaryColor } : { backgroundColor: grayColor }]} />
+          <View key={stage} style={[styles.timelineStage, index + 1 <= status ? { backgroundColor: primaryColor } : { backgroundColor: grayColor 
+          }]} />
+        
         ))}
+      </View>
+    );
+  };
+
+  const renderTimelineStage = (stage) => {
+    const stages = ['Acquired', 'Shipped', 'Arrived', 'Sent out', 'Completed'];
+    const isActive = stage <= product.status;
+    const stageColor = isActive ? '#3274cb' : 'grey';
+    const stageText = stage === product.status ? 'Current Stage' : '';
+
+    return (
+      <View style={styles.timelineStageContainer}>
+        <View
+          style={[styles.timelineStage, { backgroundColor: stageColor }]}
+        />
+        <Text style={[styles.timelineStageText, { color: stageColor }]}>
+          {stageText}
+        </Text>
+        <Text style={styles.timelineStageText}>{stages[stage-1]}</Text>
       </View>
     );
   };
@@ -26,9 +47,18 @@ const ActiveOrderCard = ({ product }) => {
       <Image source={{ uri: product.image }} style={styles.image} />
       <View style={styles.detailsContainer}>
         <Text style={styles.title}>{product.title}</Text>
-        <Text style={styles.price}>{product.price}</Text>
+        <Text style={styles.price}>${product.price}</Text>
         <Text style={styles.stockStatus}>{product.inStock ? 'In Stock' : 'Out of Stock'}</Text>
-        {renderTimelineStages(product.status)}
+        {
+        //renderTimelineStages2(product.status)
+          }
+        <View style={styles.timelineContainer}>
+          {renderTimelineStage(1)}
+          {renderTimelineStage(2)}
+          {renderTimelineStage(3)}
+          {renderTimelineStage(4)}
+          {renderTimelineStage(5)}
+        </View>
       </View>
       <TouchableOpacity style={styles.buttonContainer} onPress={handleCopyLink}>
         <Text style={styles.buttonText}>Copy Link</Text>
@@ -67,17 +97,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#888',
   },
-  timelineContainer: {
-    flexDirection: 'row',
-    marginTop: 8,
-  },
-  timelineStage: {
-    flex: 1,
-    height: 4,
-    backgroundColor: 'gray',
-    marginRight: 4,
-  },
   buttonContainer: {
+    height: 45,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#3274cb',
@@ -88,6 +109,29 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 14,
     color: 'white',
+  },
+  timelineContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 10,
+    width: 200,
+  },
+  timelineStageContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  timelineStage: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: 'grey',
+  },
+  timelineStageText: {
+    fontSize: 8,
+    color: 'black',
+    marginTop: 5,
+    fontWeight: 'bold',
   },
 });
 

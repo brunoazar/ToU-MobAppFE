@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Platform, StatusBar} from 'react-native';
+import { Platform, StatusBar, ScrollView} from 'react-native';
 import {
   View,
   Text,
@@ -12,7 +12,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import RegisterScreen from './RegisterScreen';
 import ApplyAsTravelerScreen from './ApplyAsTravelerScreen';
-import PasteLinkScreen from './Client Screens/PasteLinkScreen';
+import PasteLinkScreen from './ClientScreens/PasteLinkScreen';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -111,7 +111,7 @@ const LoginScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <Text style={styles.heading}>Login</Text>
       </View>
@@ -152,7 +152,7 @@ const LoginScreen = () => {
           <Text style={styles.applyText}>Apply as a Traveler</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { Platform, StatusBar} from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 
 const SupportScreen = ({ navigation }) => {
@@ -8,7 +9,7 @@ const SupportScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Active Orders</Text>
+      <Text style={styles.header}>Support Screen</Text>
       
     </View>
   );
@@ -16,6 +17,7 @@ const SupportScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     flex: 1,
     backgroundColor: '#fff',
     padding: 16,
@@ -24,6 +26,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
+    color: '#3274cb',
+    textAlign: 'center',
   },
 });
 

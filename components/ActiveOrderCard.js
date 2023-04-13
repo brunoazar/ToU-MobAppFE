@@ -1,34 +1,44 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
-import Clipboard from '@react-native-clipboard/clipboard';
+import React, {useState} from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Alert} from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 
 const ActiveOrderCard = ({ product }) => {
-  const handleCopyLink = () => {
-    Clipboard.setString(product.link);
+  const [url, setUrl] = useState(product.url);
+  const [status, setStatus] = useState(product.status);
+
+
+  const handleCompleteClicked = () => {
+    if(status === "4") {
+      handleOrderComplete();
+      return;
+    }
+    else {
+      Alert.alert('Order Not Sent Out', 'You can only mark an order as complete once it has been sent out.');
+    }
   };
 
-  const renderTimelineStages = (status) => {
-    const stages = ['Acquired', 'Shipped', 'Arrived', 'Sent out', 'Completed'];
-    const primaryColor = '#3274cb';
-    const grayColor = 'gray';
-
-    return (
-      <View style={styles.timelineContainer}>
-        {stages.map((stage, index) => (
-          <View key={stage} style={[styles.timelineStage, index + 1 <= status ? { backgroundColor: primaryColor } : { backgroundColor: grayColor 
-          }]} />
-        
-        ))}
-      </View>
-    );
-  };
+  const handleOrderComplete = () =>
+  
+      Alert.alert('Order Received', 'Are you sure you want to mark the order as complete?', [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+          color: 'red',
+        },
+        {text: 'YES', onPress: () => console.log('YES Pressed')
+        // Backend call to mark order as complete
+        // Update the order status in the database through the API
+      },
+      
+    ]);
 
   const renderTimelineStage = (stage) => {
     const stages = ['Acquired', 'Shipped', 'Arrived', 'Sent out', 'Completed'];
     const isActive = stage <= product.status;
     const stageColor = isActive ? '#3274cb' : 'grey';
     const stageText = stage === product.status ? 'Current Stage' : '';
-
+    
     return (
       <View style={styles.timelineStageContainer}>
         <View
@@ -60,9 +70,16 @@ const ActiveOrderCard = ({ product }) => {
           {renderTimelineStage(5)}
         </View>
       </View>
-      <TouchableOpacity style={styles.buttonContainer} onPress={handleCopyLink}>
-        <Text style={styles.buttonText}>Copy Link</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonsHolder}>
+        <TouchableOpacity style={styles.buttonContainer} onPress={() => Clipboard.setStringAsync(url)}>
+          <Text style={styles.buttonText}>Copy Link</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonContainer} onPress={handleCompleteClicked}>
+        <Text style={styles.buttonText}>Order Received</Text>
+        </TouchableOpacity>
+      </View>
+      
+      
     </View>
   );
 };
@@ -74,6 +91,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 16,
     marginBottom: 16,
+    borderColor: 'gray',
+    borderWidth: 1,
+  },
+  buttonsHolder: {
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   image: {
     width: 80,
@@ -105,6 +128,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingVertical: 8,
     paddingHorizontal: 12,
+    marginVertical: 3,
   },
   buttonText: {
     fontSize: 14,

@@ -5,15 +5,22 @@ import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from './screens/SplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
-import ApplyAsTravelerScreen from './screens/ApplyAsTravelerScreen';
 import SupportScreen from './screens/SupportScreen';
 
-
+//Client Screens
 import PasteLinkScreen from './screens/ClientScreens/PasteLinkScreen';
 import ActiveOrdersScreen from './screens/ClientScreens/ActiveOrdersScreen';
 import PendingOrdersScreen from './screens/ClientScreens/PendingOrdersScreen';
 import ProductPage  from './screens/ClientScreens/ProductPage';
 import SettingsScreen from './screens/ClientSettingsScreen';
+
+
+//Traveler Screens
+import ApplyAsTravelerScreen from './screens/ApplyAsTravelerScreen';
+import TravelerMainScreen from './screens/TravelerScreens/TravelerMainScreen';
+import ActiveOrdersScreen2 from './screens/TravelerScreens/ActiveOrdersScreen2';
+import PendingOrdersScreen2 from './screens/TravelerScreens/PendingOrdersScreen2';
+import TravelerSettingsScreen from './screens/TravelerScreens/TravelerSettingsScreen';
 
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -74,6 +81,27 @@ export default function App() {
           component={ProductPage}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="TravelerMainScreen"
+          component={TravelerMainScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ActiveOrdersScreen2"
+          component={ActiveOrdersScreen2}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="PendingOrdersScreen2"
+          component={PendingOrdersScreen2}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="TravelerSettingsScreen"
+          component={TravelerSettingsScreen}
+          options={{ headerShown: false }}
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

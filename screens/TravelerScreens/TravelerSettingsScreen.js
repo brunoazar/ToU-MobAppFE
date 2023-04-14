@@ -11,7 +11,6 @@ import {
   Linking,
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
-import lbCities from '../data/lbCities.json';
 
 const SettingsScreen = ({ navigation }) => {
 
@@ -20,7 +19,6 @@ const SettingsScreen = ({ navigation }) => {
     firstName: 'John',
     lastName: 'Doe',
     phoneNumber: '70123456',
-    city: 'Beirut',
     gender: 'M',
     nationality: 'Lebanon',
   };
@@ -29,13 +27,8 @@ const SettingsScreen = ({ navigation }) => {
   const route = useRoute();
   const email = route.params.email;
   const [phoneNumber, setPhoneNumber] = useState(profileData.phoneNumber);
-  const [city, setCity] = useState(profileData.city);
   const [isChangesSaved, setIsChangesSaved] = useState(true);
-  const [modalVisible, setModalVisible] = useState(false);
 
-
-
-  const [oldCity, setOldCity] = useState(profileData.city); // Ref for the old city, for validation
 
   function onBackPressed(){
     navigation.goBack()
@@ -44,15 +37,6 @@ const SettingsScreen = ({ navigation }) => {
   const handlePhoneNumberChange = (text) => {
     setPhoneNumber(text);
     setIsChangesSaved(false);
-  }
-  const scrollViewRef = useRef(); // Ref for ScrollView
-
-  const handleCityChange = (text) => {
-    if(oldCity !== text) {
-      setCity(text);
-      setIsChangesSaved(false);
-      setModalVisible(false);
-    }
   }
 
   const handleLogout = () => {
@@ -99,41 +83,7 @@ const SettingsScreen = ({ navigation }) => {
           value={phoneNumber}
           onChangeText={handlePhoneNumberChange}
         />
-        <Text style={styles.label}>Address:</Text>
-        <Text style={styles.value}>Lebanon</Text>
-        <View style={styles.cityContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => setModalVisible(true)}
-          >
-            <Text style={styles.buttonText}>
-              {city ? city : "Select Your City"}
-            </Text>
-          </TouchableOpacity>
-
-          <Modal
-            visible={modalVisible}
-            animationType="slide"
-            transparent={true}
-          >
-            <View style={styles.modalContainer}>
-              <View style={styles.modalContent}>
-                {/* Pass the ref to ScrollView */}
-                <ScrollView ref={scrollViewRef}>
-                  {lbCities.map((city) => (
-                    <TouchableOpacity
-                    key={city.city}
-                      style={styles.cityItem}
-                      onPress={() => handleCityChange(city.city)}
-                    >
-                      <Text style={styles.countryText}>{city.city}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-              </View>
-            </View>
-          </Modal>
-        </View>
+        
       </View>
       <TouchableOpacity
         style={styles.registerButton}
@@ -142,6 +92,7 @@ const SettingsScreen = ({ navigation }) => {
       >
         <Text style={styles.registerButtonText}>Submit Changes</Text>
       </TouchableOpacity>
+
       <TouchableOpacity
         style={styles.logoutButton}
         onPress={handleLogout}

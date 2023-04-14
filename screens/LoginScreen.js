@@ -41,7 +41,11 @@ const LoginScreen = () => {
       Alert.alert('Invalid Password', 'Please enter a password.');
       return;
     }
-  
+    
+    // Backend code for login
+    // navigate to the appropriate screen based on the user type using checkLogin function below
+    // BACKEND DEVELOPER: uncomment the code below and replace the dummy code with your own
+
     // try {
     //   //backend code for login
     //   const response = await fetch('https://example.com/api/login', {

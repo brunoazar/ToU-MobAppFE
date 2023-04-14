@@ -21,11 +21,11 @@ const ActiveOrdersScreen2 = ({navigation}) => {
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Active Orders</Text>
-                <FlatList
-                    data={activeProducts} // replace with actual active orders
-                    renderItem={renderProduct}
-                    keyExtractor={(item) => item.id.toString()}
-                />
+            <FlatList
+                data={activeProducts} // replace with actual active orders
+                renderItem={renderProduct}
+                keyExtractor={(item) => item.id.toString()}
+            />
         </View>
     );
     }
@@ -38,11 +38,12 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     header: {
-        flex: 1,
-        backgroundColor: '#3274cb',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 16,
+        color: '#3274cb',
+        textAlign: 'center',
+      },
     headerText: {
         fontSize: 24,
         fontWeight: 'bold',

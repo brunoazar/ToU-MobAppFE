@@ -16,7 +16,7 @@ const ActiveOrdersScreen = ({ navigation }) => {
   //const products = [];
 
   // Render each product as a ActiveOrderCard component
-  const renderProduct = ({ item }) => <ActiveOrderCard product={item} />;
+  const renderProduct = ({ item }) => <ActiveOrderCard navigation={navigation} product={item} email={email} />;
 
   return (
     <View style={styles.container}>

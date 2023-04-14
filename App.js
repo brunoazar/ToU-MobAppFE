@@ -14,6 +14,7 @@ import ActiveOrdersScreen from './screens/ClientScreens/ActiveOrdersScreen';
 import PendingOrdersScreen from './screens/ClientScreens/PendingOrdersScreen';
 import ProductPage  from './screens/ClientScreens/ProductPage';
 import SettingsScreen from './screens/ClientSettingsScreen';
+import FeedbackScreen from './screens/ClientScreens/FeedbackScreen';
 
 
 //Traveler Screens
@@ -107,7 +108,11 @@ export default function App() {
           component={ForgotPasswordScreen}
           options={{ headerShown: false }}
         />
-        
+        <Stack.Screen
+          name="FeedbackScreen"
+          component={FeedbackScreen}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

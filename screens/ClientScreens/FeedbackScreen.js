@@ -1,0 +1,205 @@
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { Platform, StatusBar} from 'react-native';
+
+const FeedbackScreen = ({ navigation }) => {
+  const [orderArrived, setOrderArrived] = useState(null);
+  const [itemAsDescribed, setItemAsDescribed] = useState(null);
+  const [serviceCourteous, setServiceCourteous] = useState(null);
+  const [comments, setComments] = useState('');
+
+  const email= route.params.email;
+  // email is passed from the previous screen to send the feedback from the user to the server
+
+  const handleFormSubmit = () => {
+    // Validate answers
+    if (orderArrived === null || itemAsDescribed === null || serviceCourteous === null) {
+      alert('Please answer all questions');
+      return;
+    }
+
+    // Perform form submission logic here
+    console.log('Form submitted:', {
+      orderArrived,
+      itemAsDescribed,
+      serviceCourteous,
+      comments
+    });
+
+    //BACKEND CALL TO SEND FEEDBACK TO SERVER AND TO UPDATE THE ORDER STATUS IN THE DATABASE THROUGH THE API
+    navigation.navigate('PasteLinkScreen', {email: email});
+  };
+
+  
+
+  return (
+    <View style={styles.container}>
+        <Text style={styles.header}>Feedback</Text>
+      
+
+      <View style={styles.questionContainer}>
+        <Text style={styles.questionText}>Order arrived by the given date?</Text>
+        <View style={styles.radioContainer}>
+          <TouchableOpacity
+            style={[
+              styles.radioBtn,
+              orderArrived === true && styles.radioBtnSelected
+            ]}
+            onPress={() => setOrderArrived(true)}
+          >
+            <Text style={styles.radioBtnText}>Yes</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.radioBtn,
+              orderArrived === false && styles.radioBtnSelected
+            ]}
+            onPress={() => setOrderArrived(false)}
+          >
+            <Text style={styles.radioBtnText}>No</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.questionContainer}>
+        <Text style={styles.questionText}>Item as described by seller?</Text>
+        <View style={styles.radioContainer}>
+          <TouchableOpacity
+            style={[
+              styles.radioBtn,
+              itemAsDescribed === true && styles.radioBtnSelected
+            ]}
+            onPress={() => setItemAsDescribed(true)}
+          >
+            <Text style={styles.radioBtnText}>Yes</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.radioBtn,
+              itemAsDescribed === false && styles.radioBtnSelected
+            ]}
+            onPress={() => setItemAsDescribed(false)}
+          >
+            <Text style={styles.radioBtnText}>No</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.questionContainer}>
+        <Text style={styles.questionText}>Service can be described as courteous?</Text>
+        <View style={styles.radioContainer}>
+        <TouchableOpacity
+            style={[
+              styles.radioBtn,
+              serviceCourteous === true && styles.radioBtnSelected
+            ]}
+            onPress={() => setServiceCourteous(true)}
+          >
+            <Text style={styles.radioBtnText}>Yes</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.radioBtn,
+              serviceCourteous === false && styles.radioBtnSelected
+            ]}
+            onPress={() => setServiceCourteous(false)}
+          >
+            <Text style={styles.radioBtnText}>No</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.commentsContainer}>
+        <Text style={styles.commentsLabel}>Comments</Text>
+        <TextInput
+          style={styles.commentsInput}
+          multiline
+          maxLength={500}
+          value={comments}
+          onChangeText={setComments}
+          placeholder="Add comments (optional)"
+        />
+      </View>
+      <TouchableOpacity style={styles.submitBtn} onPress={handleFormSubmit}>
+        <Text style={styles.submitBtnText}>Submit</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 ,
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#fff',
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
+  questionContainer: {
+    marginBottom: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  questionText: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginRight: 8,
+  },
+  radioContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+  },
+  radioBtn: {
+    width: 30,
+    height: 30,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#3274cb',
+    marginRight: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  radioBtnSelected: {
+    backgroundColor: '#3274cb',
+  },
+  radioBtnText: {
+    color: 'black',
+    fontSize: 14,
+  },
+  commentsContainer: {
+    marginBottom: 16,
+  },
+  commentsLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  commentsInput: {
+    height: 100,
+    borderWidth: 1,
+    borderColor: '#3274cb',
+    borderRadius: 8,
+    padding: 12,
+    textAlignVertical: 'top',
+  },
+  submitBtn: {
+    backgroundColor: '#3274cb',
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  submitBtnText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+    color: '#3274cb',
+    textAlign: 'center',
+  },
+});
+
+export default FeedbackScreen;

@@ -9,28 +9,28 @@ const ActiveOrderCard = ({ product }) => {
   const [proofOfReceiptName, setProofOfReceiptName] = useState("");
 
   const handleProofOfReceiptClicked = () => {
-    if(status === "0" ) {
+    if(status === "2" ) {
       // This means the order has not been acquired yet
       _pickProofOfReceipt();
       return;
     }
-    else if(status === "1") {
+    else if(status === "3") {
       // This means the order has been acquired
       Alert.alert('Order Already Acquired', 'You can only upload a proof of receipt once the order has been accepted.');
     }
-    else if(status === "2") {
+    else if(status === "4") {
       // This means the order has been shipped
       Alert.alert('Order Already Shipped', 'You can only upload a proof of receipt once the order has been accepted.');
     }
-    else if(status === "3") {
+    else if(status === "5") {
       // This means the order has arrived to Lebanon
       Alert.alert('Order Already Arrived', 'You can only upload a proof of receipt once the order has been accepted.');
     }
-    else if(status === "4") {
+    else if(status === "6") {
       // This means the order has been sent out
       Alert.alert('Order Already Sent Out', 'You can only upload a proof of receipt once the order has been accepted.');
     }
-    else if(status === "5") {
+    else if(status === "7") {
       // This means the order has been completed
       Alert.alert('Order Already Completed', 'You can only upload a proof of receipt once the order has been accepted.');
     }
@@ -40,52 +40,52 @@ const ActiveOrderCard = ({ product }) => {
   };
   const handleShippedClicked = () => {
     // if the status is 1, then the order has been acquired
-    if(status === "1") {
+    if(status === "3") {
       handleOrderShipped();
       return;
     }
     // if the status is 0, then the order has not been acquired yet
-    else if(status === "0") {
+    else if(status === "2") {
       Alert.alert('Order Not Acquired', 'You can only mark an order as shipped once it has been acquired.');
     }
     // if the status is 2, then the order has been shipped
-    else if(status === "2") {
+    else if(status === "4") {
       Alert.alert('Order Already Shipped', 'You can only mark an order as shipped once.');
     }
     // if the status is 3, then the order has arrived to Lebanon
-    else if(status === "3") {
+    else if(status === "5") {
       Alert.alert('Order Already Arrived', 'You can only mark an order as shipped once.');
     }
     // if the status is 4, then the order has been sent out
-    else if(status === "4") {
+    else if(status === "6") {
       Alert.alert('Order Already Sent Out', 'You can only mark an order as shipped once.');
     }
     // if the status is 5, then the order has been completed
-    else if(status === "5") {
+    else if(status === "7") {
       Alert.alert('Order Already Completed', 'You can only mark an order as shipped once.');
     }
   };
 
   const handleArrivedClicked = () => {
-    if(status === "2") {
+    if(status === "4") {
       handleOrderArrived();
       return;
     }
-    else if(status === "0") {
+    else if(status === "2") {
       Alert.alert('Order Not Acquired', 'You can only mark an order as arrived once it has been acquired.');
     }
-    else if(status === "1") {
+    else if(status === "3") {
       Alert.alert('Order Not Shipped', 'You can only mark an order as arrived once it has been shipped.');
     }
-    else if(status === "3") {
+    else if(status === "5") {
       // This means the order has already arrived to Lebanon
       Alert.alert('Order Already Arrived', 'You can only mark an order as arrived once.');
     }
-    else if(status === "4") {
+    else if(status === "6") {
       // This means the order has already been sent out
       Alert.alert('Order Already Sent Out', 'You can only mark an order as arrived once.');
     }
-    else if(status === "5") {
+    else if(status === "7") {
       // This means the order has already been completed
       Alert.alert('Order Already Completed', 'You can only mark an order as arrived once.');
     }
@@ -150,7 +150,7 @@ const ActiveOrderCard = ({ product }) => {
 
   const renderTimelineStage = (stage) => {
     const stages = ['Acquired', 'Shipped', 'Arrived', 'Sent out', 'Completed'];
-    const isActive = stage <= product.status;
+    const isActive = stage <= parseInt(product.status);
     const stageColor = isActive ? '#3274cb' : 'grey';
     const stageText = stage === product.status ? 'Current Stage' : '';
     
@@ -162,7 +162,7 @@ const ActiveOrderCard = ({ product }) => {
         <Text style={[styles.timelineStageText, { color: stageColor }]}>
           {stageText}
         </Text>
-        <Text style={styles.timelineStageText}>{stages[stage-1]}</Text>
+        <Text style={styles.timelineStageText}>{stages[stage-3]}</Text>
       </View>
     );
   };
@@ -178,11 +178,16 @@ const ActiveOrderCard = ({ product }) => {
         //renderTimelineStages2(product.status)
           }
         <View style={styles.timelineContainer}>
-          {renderTimelineStage(1)}
-          {renderTimelineStage(2)}
-          {renderTimelineStage(3)}
-          {renderTimelineStage(4)}
-          {renderTimelineStage(5)}
+          {renderTimelineStage(3) // 3 is the acquired stage
+          } 
+          {renderTimelineStage(4) // 4 is the shipped stage
+        }
+          {renderTimelineStage(5) // 5 is the arrived stage
+        }
+          {renderTimelineStage(6) // 6 is the sent out stage
+        }
+          {renderTimelineStage(7) // 7 is the completed stage
+          }
         </View>
       </View>
       <View style={styles.buttonsHolder}>

@@ -2,19 +2,25 @@ import React, {useState} from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Alert} from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 
-const ActiveOrderCard = ({ product }) => {
+const ActiveOrderCard = ({ navigation, product, email }) => {
   const [url, setUrl] = useState(product.url);
   const [status, setStatus] = useState(product.status);
 
 
   const handleCompleteClicked = () => {
-    if(status === "4") {
+    if(status === "6") {
       handleOrderComplete();
       return;
     }
     else {
       Alert.alert('Order Not Sent Out', 'You can only mark an order as complete once it has been sent out.');
     }
+  };
+
+  const afterCompletion = () => {
+    // Backend call to mark order as complete
+    // Update the order status in the database through the API
+    navigation.navigate('FeedbackScreen', {email: email});
   };
 
   const handleOrderComplete = () =>
@@ -26,9 +32,8 @@ const ActiveOrderCard = ({ product }) => {
           style: 'cancel',
           color: 'red',
         },
-        {text: 'YES', onPress: () => console.log('YES Pressed')
-        // Backend call to mark order as complete
-        // Update the order status in the database through the API
+        {text: 'YES', onPress: () => afterCompletion()
+        
       },
       
     ]);
@@ -47,11 +52,15 @@ const ActiveOrderCard = ({ product }) => {
         <Text style={[styles.timelineStageText, { color: stageColor }]}>
           {stageText}
         </Text>
-        <Text style={styles.timelineStageText}>{stages[stage-1]}</Text>
+        <Text style={styles.timelineStageText}>{stages[stage-3]}</Text>
       </View>
     );
   };
 
+  const handleCopyLinkClicked = () => {
+    Clipboard.setStringAsync(url);
+    alert('Link copied to clipboard');
+  };
   return (
     <View style={styles.cardContainer}>
       <Image source={{ uri: product.image }} style={styles.image} />
@@ -63,20 +72,21 @@ const ActiveOrderCard = ({ product }) => {
         //renderTimelineStages2(product.status)
           }
         <View style={styles.timelineContainer}>
-          {renderTimelineStage(1)}
-          {renderTimelineStage(2)}
           {renderTimelineStage(3)}
           {renderTimelineStage(4)}
           {renderTimelineStage(5)}
+          {renderTimelineStage(6)}
+          {renderTimelineStage(7)}
         </View>
       </View>
       <View style={styles.buttonsHolder}>
-        <TouchableOpacity style={styles.buttonContainer} onPress={() => Clipboard.setStringAsync(url)}>
+        <TouchableOpacity style={styles.buttonContainer} onPress={handleCopyLinkClicked}>
           <Text style={styles.buttonText}>Copy Link</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonContainer} onPress={handleCompleteClicked}>
-        <Text style={styles.buttonText}>Order Received</Text>
+          <Text style={styles.buttonText}>Order Received</Text>
         </TouchableOpacity>
+        
       </View>
       
       

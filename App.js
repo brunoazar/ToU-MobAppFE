@@ -6,6 +6,7 @@ import SplashScreen from './screens/SplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import SupportScreen from './screens/SupportScreen';
+import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 
 //Client Screens
 import PasteLinkScreen from './screens/ClientScreens/PasteLinkScreen';
@@ -101,7 +102,12 @@ export default function App() {
           component={TravelerSettingsScreen}
           options={{ headerShown: false }}
         />
-
+        <Stack.Screen
+          name="ForgotPasswordScreen"
+          component={ForgotPasswordScreen}
+          options={{ headerShown: false }}
+        />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );

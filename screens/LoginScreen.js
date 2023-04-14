@@ -90,12 +90,12 @@ const LoginScreen = () => {
   };
   
   
-  
-      ////
+
   const handlePress = () => {
-    Linking.openURL('https://example.com/forgot-password');
+    // handles the forgot password button
+    navigation.navigate("ForgotPasswordScreen")
   };
-  ////
+  
 
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

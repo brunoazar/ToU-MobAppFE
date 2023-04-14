@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Platform, StatusBar} from 'react-native';
+import StarRating from 'react-native-star-rating-widget';
 
 const FeedbackScreen = ({ navigation }) => {
   const [orderArrived, setOrderArrived] = useState(null);
   const [itemAsDescribed, setItemAsDescribed] = useState(null);
   const [serviceCourteous, setServiceCourteous] = useState(null);
   const [comments, setComments] = useState('');
+  const [rating, setRating] = useState(0);
 
   const email= route.params.email;
   // email is passed from the previous screen to send the feedback from the user to the server
@@ -35,7 +37,14 @@ const FeedbackScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
         <Text style={styles.header}>Feedback</Text>
-      
+        <View style={styles.ratingContainer}>
+          <StarRating
+          rating={rating}
+          onChange={setRating}
+          color='#3274cb'
+          emptyColor='#d3d3d3'
+        />
+        </View>
 
       <View style={styles.questionContainer}>
         <Text style={styles.questionText}>Order arrived by the given date?</Text>
@@ -199,6 +208,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     color: '#3274cb',
     textAlign: 'center',
+  },
+  ratingContainer: {
+    marginBottom: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

@@ -71,7 +71,7 @@ const LoginScreen = () => {
 
 
     //JUST FOR TESTING
-    navigation.navigate("TravelerMainScreen", { email: email });
+    navigation.navigate("PasteLinkScreen", { email: email });
     //JUST FOR TESTING
   };
 

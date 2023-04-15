@@ -15,6 +15,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import countriesData from '../data/countriesData.json';
 import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
 
 const ApplyAsTravelerScreen = () => {
   const [firstName, setFirstName] = useState('');
@@ -31,6 +32,8 @@ const ApplyAsTravelerScreen = () => {
   const [idUri, setIdUri] = useState('');
   const [cvName, setCvName] = useState('');
   const [idName, setIdName] = useState('');
+  const [cv, setCv] = useState(null);
+  const [id, setId] = useState(null);
 
   
   const navigation = useNavigation();
@@ -183,8 +186,18 @@ const ApplyAsTravelerScreen = () => {
         type: "application/pdf"
       });
 
-      setCvName(result.name);
-      setCvUri(result.uri);
+      const fileInfo = await FileSystem.getInfoAsync(result.uri);
+      const fileUri = fileInfo.uri;
+      const fileName = fileInfo.name;
+
+      const downloadedFile = await FileSystem.downloadAsync(
+        fileUri,
+        FileSystem.documentDirectory + fileName
+      );
+
+      setCvName(fileName);
+      setCvUri(fileUri);
+      setCv(downloadedFile);
       }
       catch(e){
         console.log(e);
@@ -195,19 +208,29 @@ const ApplyAsTravelerScreen = () => {
 
     _pickId = async () => {
       // used to pick id from the device
-        try{
-          let result = await DocumentPicker.getDocumentAsync({ 
-          copyToCacheDirectory: true,
-          type: "application/pdf",
-        });
-        
-        setIdName(result.name);
-        setIdUri(result.uri);
-        }
-        catch(e){
-          console.log(e);
-          return;
-        }
+      try{
+        let result = await DocumentPicker.getDocumentAsync({ 
+        copyToCacheDirectory: true,
+        type: "application/pdf"
+      });
+
+      const fileInfo = await FileSystem.getInfoAsync(result.uri);
+      const fileUri = fileInfo.uri;
+      const fileName = fileInfo.name;
+
+      const downloadedFile = await FileSystem.downloadAsync(
+        fileUri,
+        FileSystem.documentDirectory + fileName
+      );
+
+      setIdName(fileName);
+      setIdUri(fileUri);
+      setId(downloadedFile);
+      }
+      catch(e){
+        console.log(e);
+        return;
+      }
       
       }
     

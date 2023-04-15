@@ -7,6 +7,8 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import SupportScreen from './screens/SupportScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
+// const express = require('express');
+// const app = express();
 
 //Client Screens
 import PasteLinkScreen from './screens/ClientScreens/PasteLinkScreen';
@@ -126,3 +128,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+// app.listen(3000, function(){
+//   console.log("Server started on port 3000");
+// })
+

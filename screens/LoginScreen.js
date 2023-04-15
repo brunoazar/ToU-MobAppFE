@@ -1,3 +1,5 @@
+import axios from '../api/axios';
+// import axios from '../src/api/axios';
 import React, { useState } from 'react';
 import { Platform, StatusBar, ScrollView} from 'react-native';
 import {
@@ -30,6 +32,7 @@ const LoginScreen = () => {
 
   ////
   const handleLogin = async () => {
+    console.log("We are here");
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -41,6 +44,27 @@ const LoginScreen = () => {
       Alert.alert('Invalid Password', 'Please enter a password.');
       return;
     }
+
+    try{
+      console.log("We are here 2");
+      const res = await axios.post('/login',//post request
+      JSON.stringify({email: email, password: password}),//include email and password
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+      );
+      console.log(res.data);//for you to check what the server is responding with
+
+      //send user to corresponding page
+
+      checkLogin(res.status, res.data.userType);
+
+    }catch(err){
+
+      console.log(err);
+    }
+
+
     
     // Backend code for login
     // navigate to the appropriate screen based on the user type using checkLogin function below
@@ -48,7 +72,7 @@ const LoginScreen = () => {
 
     // try {
     //   //backend code for login
-    //   const response = await fetch('https://example.com/api/login', {
+    //   const response = await fetch('http://localhost:5000/login', {
     //     method: 'POST',
     //     headers: {
     //       'Content-Type': 'application/json',
@@ -71,7 +95,7 @@ const LoginScreen = () => {
 
 
     //JUST FOR TESTING
-    navigation.navigate("PasteLinkScreen", { email: email });
+    // navigation.navigate("PasteLinkScreen", { email: email });
     //JUST FOR TESTING
   };
 

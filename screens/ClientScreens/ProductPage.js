@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   productCard: {
     flexDirection: 'row',
     alignSelf: 'center',
-    verticalAlign: 'center',
+    // verticalAlign: 'center',
   },
   qtyContainer: {
     flexDirection: 'row',

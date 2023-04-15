@@ -1,3 +1,4 @@
+import axios from '../api/axios';
 import React, { useState, useRef } from 'react';
 import { Platform, StatusBar, Modal} from 'react-native';
 import {
@@ -40,7 +41,7 @@ const RegisterScreen = () => {
       navigation.goBack()
   }
   
-  const handleRegister = () => {
+  const handleRegister = async () => {
     // Handle registration logic here
     if(!phoneAndEmailIsOk()){
       Alert.alert('Invalid Input', 'Please make sure you filled the form correctly.');
@@ -51,12 +52,30 @@ const RegisterScreen = () => {
     };
     //If the code reached here, it means that the form is valid
     //Backend developer, your code goes here :)
+    try{
+      console.log("We are here 2");
+      const res = await axios.post('/signup',//post request
+      JSON.stringify({email, password, name: firstName,lastname: lastName, nationality: "Lebanon", gender, city}),//include email and password
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+      );
+      console.log(res.data);//for you to check what the server is responding with
+
+      //send user to corresponding page
+
+      checkRegistration(res.status);
+
+    }catch(err){
+
+      console.log(err);
+    }
     
   };
 
-  const checkRegistration = (responseCode, userType) => {
+  const checkRegistration = (responseCode) => {
     // Handle registration logic here
-    if(responseCode == 200){
+    if(responseCode == 201){
       Alert.alert('Registration Successful', 'Keep an eye out on your email junk/spam folder.');
       navigation.navigate("LoginScreen");
       

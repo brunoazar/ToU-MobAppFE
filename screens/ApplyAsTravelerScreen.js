@@ -1,3 +1,4 @@
+import axios from '../api/axios';
 import React, { useState, useRef, useCallback } from 'react';
 import { Platform, StatusBar} from 'react-native';
 import {
@@ -38,7 +39,7 @@ const ApplyAsTravelerScreen = () => {
       navigation.goBack()
   }
   
-  const handleRegister = () => {
+  const handleRegister = async () => {
     // Handle registration logic here
     if(!phoneAndEmailIsOk()){
       Alert.alert('Invalid Input', 'Please make sure you filled the form correctly.');
@@ -50,6 +51,25 @@ const ApplyAsTravelerScreen = () => {
     //If the code reached here, it means that the form is valid
     //Backend developer, your code goes here :)
     //use const checkApplication to handle the response
+
+    try{
+      console.log("We are here 3");
+      const res = await axios.post('/travelersignup',//post request
+      JSON.stringify({email: email, password: password}),//include email and password
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+      );
+      console.log(res.data);//for you to check what the server is responding with
+
+      //send user to corresponding page
+
+      checkApplication(res.status);
+
+    }catch(err){
+
+      console.log(err);
+    }
   };
 
   const checkApplication = (responseCode) => {

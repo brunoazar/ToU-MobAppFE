@@ -10,7 +10,7 @@ import { useNavigation  } from '@react-navigation/native';
 
 const BottomNav = ({navigation, email}) => {
 
-  route = useRoute();
+  const route = useRoute();
   //const email = route.params.email;
   
   // Function to handle navigation to different screens

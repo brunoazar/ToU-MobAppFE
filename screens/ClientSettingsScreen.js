@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import lbCities from '../data/lbCities.json';
+import { Ionicons } from '@expo/vector-icons';
 
 const SettingsScreen = ({ navigation }) => {
 
@@ -84,6 +85,11 @@ const SettingsScreen = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Edit Profile</Text>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backContainer}>
+        <View style={styles.backButtonContainer}>
+          <Ionicons name="ios-close" size={28} color="#3274cb" />
+        </View>
+      </TouchableOpacity>
       <View style={styles.profileDataContainer}>
         <Text style={styles.label}>First Name:</Text>
         <Text style={styles.value}>{profileData.firstName}</Text>
@@ -251,6 +257,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 10,
+  },
+  backContainer: {
+    position: 'absolute',
+    top: 20,
+    right: 10,
+    zIndex: 9999,
+  },
+  backButtonContainer: {
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

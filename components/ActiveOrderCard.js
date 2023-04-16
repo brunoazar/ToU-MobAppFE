@@ -20,7 +20,7 @@ const ActiveOrderCard = ({ navigation, product, email }) => {
   const afterCompletion = () => {
     // Backend call to mark order as complete
     // Update the order status in the database through the API
-    navigation.navigate('FeedbackScreen', {email: email});
+    navigation.navigate('FeedbackScreen', {email: email, orderID: product.id});
   };
 
   const handleOrderComplete = () =>

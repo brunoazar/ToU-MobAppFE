@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView, TouchableOpacity } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { Platform, StatusBar} from 'react-native';
 import ActiveOrderCard from '../../components/ActiveOrderCard';
+import { Ionicons } from '@expo/vector-icons';
 
 // importing fake data for testing
 import activeProducts from '../../fake_data/activeProducts';
@@ -21,6 +22,11 @@ const ActiveOrdersScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Active Orders</Text>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backContainer}>
+        <View style={styles.backButtonContainer}>
+          <Ionicons name="ios-close" size={28} color="#3274cb" />
+        </View>
+      </TouchableOpacity>
       <FlatList
         data={activeProducts} // replace with actual active orders
         renderItem={renderProduct}
@@ -43,6 +49,20 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     color: '#3274cb',
     textAlign: 'center',
+  },
+  backContainer: {
+    position: 'absolute',
+    top: 20,
+    right: 10,
+    zIndex: 9999,
+  },
+  backButtonContainer: {
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

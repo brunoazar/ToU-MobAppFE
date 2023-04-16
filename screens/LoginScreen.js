@@ -23,10 +23,14 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   function navigateToRegister() {
+    setEmail('');
+    setPassword('');
       navigation.navigate("RegisterScreen");
   }
 
   function navigateToApply() {
+    setEmail('');
+    setPassword('');
     navigation.navigate("ApplyAsTravelerScreen");
 }
 
@@ -92,11 +96,6 @@ const LoginScreen = () => {
     //   console.log(error);
     //   // TODO: handle login error using checkLogin function below
     // }
-
-
-    //JUST FOR TESTING
-    // navigation.navigate("PasteLinkScreen", { email: email });
-    //JUST FOR TESTING
   };
 
   const checkLogin = (responseCode, userType) => {
@@ -104,12 +103,17 @@ const LoginScreen = () => {
     if(responseCode == 200){
       Alert.alert('Login Successful');
       if(userType == 'traveler'){
+        setPassword('');
         navigation.navigate("TravelerMainScreen", { email: email });
       }else{
+        setPassword('');
         navigation.navigate("PasteLinkScreen", { email: email });
       }
-    }else{
-      Alert.alert('Login Failed');
+    }else if(responseCode == 403){
+      Alert.alert('Account Blocked', 'Too many failed login attempts.');
+    }
+    else{
+      Alert.alert('Login Failed', 'Incorrect email or password.');
     }
   };
   

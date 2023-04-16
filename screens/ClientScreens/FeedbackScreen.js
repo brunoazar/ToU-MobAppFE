@@ -12,6 +12,7 @@ const FeedbackScreen = ({ navigation }) => {
 
   const email= route.params.email;
   // email is passed from the previous screen to send the feedback from the user to the server
+  const orderID= route.params.orderID;
 
   const handleFormSubmit = () => {
     // Validate answers

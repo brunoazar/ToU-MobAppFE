@@ -32,8 +32,10 @@ const ApplyAsTravelerScreen = () => {
   const [idUri, setIdUri] = useState('');
   const [cvName, setCvName] = useState('');
   const [idName, setIdName] = useState('');
-  const [cv, setCv] = useState(null);
-  const [id, setId] = useState(null);
+  const [cvType, setCvtype] = useState('');
+  const [idType, setIdtype] = useState('');
+  const [cvData, setCvdata] = useState('');
+  const [idData, setIddata] = useState('');
 
   
   const navigation = useNavigation();
@@ -57,12 +59,33 @@ const ApplyAsTravelerScreen = () => {
 
     try{
       console.log("We are here 3");
-      const res = await axios.post('/travelersignup',//post request
-      JSON.stringify({email: email, password: password}),//include email and password
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
-      );
+      const formData = new FormData();
+      formData.append('cv', {
+        uri: cvUri,
+        type: cvType,
+        name: cvName,
+        data: cvData
+      });
+      formData.append('id', {
+        uri: idUri,
+        type: idType,
+        name: idName,
+        data: idData
+      });
+      formData.append('otherData', JSON.stringify({
+        name: firstName,
+        lastname: lastName,
+        gender,
+        email,
+        phone: phoneNumber,
+        nationality: selectedCountry,
+      }));
+      const res = await axios.post('/travelersignup', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
       console.log(res.data);//for you to check what the server is responding with
 
       //send user to corresponding page
@@ -178,26 +201,29 @@ const ApplyAsTravelerScreen = () => {
   };
 
   
-  _pickCv = async () => {
+  const _pickCv = async () => {
     // used to pick cv from the device
       try{
         let result = await DocumentPicker.getDocumentAsync({ 
-        copyToCacheDirectory: true,
-        type: "application/pdf"
+        copyToCacheDirectory: false,
+        type: "*/*"
+      });
+      const fileUri = result.uri;
+      const fileName = result.name;
+      const mimeType = result.mimeType;
+
+      const tempFileUri = FileSystem.cacheDirectory + fileName;
+      await FileSystem.copyAsync({
+        from: fileUri,
+        to: tempFileUri
       });
 
-      const fileInfo = await FileSystem.getInfoAsync(result.uri);
-      const fileUri = fileInfo.uri;
-      const fileName = fileInfo.name;
-
-      const downloadedFile = await FileSystem.downloadAsync(
-        fileUri,
-        FileSystem.documentDirectory + fileName
-      );
+      const fileData = await FileSystem.readAsStringAsync(tempFileUri, { encoding: FileSystem.EncodingType.Base64 });
 
       setCvName(fileName);
-      setCvUri(fileUri);
-      setCv(downloadedFile);
+      setCvUri(tempFileUri);
+      setCvtype(mimeType);
+      setCvdata(fileData);
       }
       catch(e){
         console.log(e);
@@ -206,33 +232,36 @@ const ApplyAsTravelerScreen = () => {
     
     }
 
-    _pickId = async () => {
+    const _pickId = async () => {
       // used to pick id from the device
       try{
         let result = await DocumentPicker.getDocumentAsync({ 
-        copyToCacheDirectory: true,
-        type: "application/pdf"
+        copyToCacheDirectory: false,
+        type: "*/*"
+      });
+      const fileUri = result.uri;
+      const fileName = result.name;
+      const mimeType = result.mimeType;
+
+      const tempFileUri = FileSystem.cacheDirectory + fileName;
+      await FileSystem.copyAsync({
+        from: fileUri,
+        to: tempFileUri
       });
 
-      const fileInfo = await FileSystem.getInfoAsync(result.uri);
-      const fileUri = fileInfo.uri;
-      const fileName = fileInfo.name;
-
-      const downloadedFile = await FileSystem.downloadAsync(
-        fileUri,
-        FileSystem.documentDirectory + fileName
-      );
+      const fileData = await FileSystem.readAsStringAsync(tempFileUri, { encoding: FileSystem.EncodingType.Base64 });
 
       setIdName(fileName);
-      setIdUri(fileUri);
-      setId(downloadedFile);
+      setIdUri(tempFileUri);
+      setIdtype(mimeType);
+      setIddata(fileData);
       }
       catch(e){
         console.log(e);
         return;
       }
-      
-      }
+
+    }
     
   
 
@@ -336,10 +365,10 @@ const ApplyAsTravelerScreen = () => {
         
         
         <View style={styles.uploadContainer}>
-          <TouchableOpacity style={styles.uploadButton} onPress={this._pickCv}>
+          <TouchableOpacity style={styles.uploadButton} onPress={_pickCv}>
             <Text style={styles.uploadButtonText}>Upload CV as pdf</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.uploadButton} onPress={this._pickId}>
+          <TouchableOpacity style={styles.uploadButton} onPress={_pickId}>
             <Text style={styles.uploadButtonText}>Upload ID as pdf</Text>
           </TouchableOpacity>
         </View>

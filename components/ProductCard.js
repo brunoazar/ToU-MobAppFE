@@ -2,13 +2,13 @@ import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 
 const ProductCard = ({ navigation, product }) => {
-  const { imageSource, url, title, price, id, dimensions, inStock } = product;
+  const { imageSource, url, title, price, asin, dims, Instock } = product;
 
   // Variables for remaining details
   const productUrl = url;
-  const productID = id;
-  const productDimensions = dimensions;
-  const isProductInStock = inStock;
+  const productID = asin;
+  const productDimensions = dims;
+  const isProductInStock = Instock;
 
   return (
     <View style={styles.container}>

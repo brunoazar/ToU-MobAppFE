@@ -4,6 +4,7 @@ import ProductPage from './ProductPage';
 import { Platform, StatusBar} from 'react-native';
 import BottomNav from '../../components/BottomNav'; // Import the bottom navigation component
 import { useRoute } from '@react-navigation/native';
+import axios from '../../api/axios';
 
 const PasteLinkScreen = ({ navigation }) => {
   const [link, setLink] = useState('');
@@ -22,7 +23,7 @@ const PasteLinkScreen = ({ navigation }) => {
     inStock: true,
   };
 
-  const handleCheckProduct = () => {
+  const handleCheckProduct = async () => {
     //Validate the link
     if (!isValidUrl(link)) {
       Alert.alert('Invalid URL', 'Please enter a valid amazon URL');
@@ -33,8 +34,28 @@ const PasteLinkScreen = ({ navigation }) => {
     // Implement logic for sending the link to the backend, and then redirecting to the product page with a json object containing the product details
     // For now, we will just redirect to the product page for testing purposes
 
+    try{
+      console.log("We are here 4");
+      const res = await axios.post('/searchproduct',//post request
+      JSON.stringify({link}),//include email and password
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+      );
+      console.log(res.data);//for you to check what the server is responding with
+
+      //send user to corresponding page
+      if(res.status == 200){
+        navigation.navigate('ProductPage', { product: res.data, email: email });
+      }
+
+    }catch(err){
+
+      console.log(err);
+    }
+
     // JUST FOR TESTING
-    navigation.navigate('ProductPage', { product: product, email: email }); // Redirect to the product page with the product details
+    // navigation.navigate('ProductPage', { product: product, email: email }); // Redirect to the product page with the product details
     // JUST FOR TESTING
   }
 

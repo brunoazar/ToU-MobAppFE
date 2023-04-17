@@ -14,6 +14,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import lbCities from '../data/lbCities.json';
+import { Ionicons } from '@expo/vector-icons';
+
 
 const RegisterScreen = () => {
   const [firstName, setFirstName] = useState('');
@@ -183,7 +185,11 @@ const RegisterScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Register</Text>
-
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backContainer}>
+                <View style={styles.backButtonContainer}>
+                <Ionicons name="ios-close" size={28} color="#3274cb" />
+                </View>
+            </TouchableOpacity>
       <View style={styles.form}>
         <TextInput
           placeholder="First Name"
@@ -342,6 +348,20 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       backgroundColor: '#fff',
       paddingVertical: 20,
+    },
+    backContainer: {
+      position: 'absolute',
+      top: 20,
+      right: 10,
+      zIndex: 9999,
+    },
+    backButtonContainer: {
+      backgroundColor: '#ffffff',
+      borderRadius: 20,
+      width: 40,
+      height: 40,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     title: {
       fontSize: 24,

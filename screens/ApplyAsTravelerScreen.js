@@ -12,6 +12,7 @@ import {
   Modal,
   Linking,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import countriesData from '../data/countriesData.json';
 import * as DocumentPicker from 'expo-document-picker';
@@ -44,6 +45,15 @@ const ApplyAsTravelerScreen = () => {
       navigation.goBack()
   }
   
+  // new code for waiting 10 seconds before submitting
+  const logRegister = () => {
+    console.log('clicked Apply');
+    Alert.alert('Uploading...', 'Please wait while we process your application.');
+    setTimeout(handleRegister, 10000);
+    
+  };
+
+
   const handleRegister = async () => {
     // Handle registration logic here
     if(!phoneAndEmailIsOk()){
@@ -268,7 +278,11 @@ const ApplyAsTravelerScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Apply as a Traveler</Text>
-
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backContainer}>
+                <View style={styles.backButtonContainer}>
+                <Ionicons name="ios-close" size={28} color="#3274cb" />
+                </View>
+            </TouchableOpacity>
       <View style={styles.form}>
         <TextInput
           placeholder="First Name"
@@ -396,7 +410,7 @@ const ApplyAsTravelerScreen = () => {
 
         <TouchableOpacity
           style={styles.applyButton}
-          onPress={handleRegister}>
+          onPress={logRegister}>
           <Text style={styles.applyButtonText}>Apply</Text>
         </TouchableOpacity>
       </View>
@@ -417,6 +431,20 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       marginBottom: 20,
       color: '#3274cb',
+    },
+    backContainer: {
+      position: 'absolute',
+      top: 20,
+      right: 10,
+      zIndex: 9999,
+    },
+    backButtonContainer: {
+      backgroundColor: '#ffffff',
+      borderRadius: 20,
+      width: 40,
+      height: 40,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     form: {
       width: '80%',

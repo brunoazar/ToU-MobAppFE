@@ -15,9 +15,10 @@ const TravelerMainScreen = ({navigation}) => {
     const handleTicketUploadClicked = () => {
         _pickTicket();
         // BACKEND CODE TO UPLOAD TICKET TO DATABASE
+        //will add 10 second wait later
     };
 
-    _pickTicket= async () => {
+    const _pickTicket= async () => {
         // used to pick a ticket from the user's phone
           try{
             let result = await DocumentPicker.getDocumentAsync({ 

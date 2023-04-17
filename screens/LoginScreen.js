@@ -60,8 +60,7 @@ const LoginScreen = () => {
       console.log(res.data);//for you to check what the server is responding with
 
       //send user to corresponding page
-
-      checkLogin(res.status, res.data.userType);
+      checkLogin(res.status, res.data.type);
 
     }catch(err){
 
@@ -102,7 +101,7 @@ const LoginScreen = () => {
     // Handle login logic here
     if(responseCode == 200){
       Alert.alert('Login Successful');
-      if(userType == 'traveler'){
+      if(userType == 'Traveler' || userType == 'traveler'){
         setPassword('');
         navigation.navigate("TravelerMainScreen", { email: email });
       }else{

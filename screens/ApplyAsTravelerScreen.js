@@ -94,7 +94,7 @@ const ApplyAsTravelerScreen = () => {
         lastname: lastName,
         gender,
         email,
-        phone: phoneNumber,
+        phone_number: phoneNumber,
         nationality: selectedCountry,
       }));
       const res = await axios.post('/travelersignup', formData, {

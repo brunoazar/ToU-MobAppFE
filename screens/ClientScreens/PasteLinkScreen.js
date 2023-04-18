@@ -36,7 +36,7 @@ const PasteLinkScreen = ({ navigation }) => {
 
     try{
       console.log("We are here 4");
-      const res = await axios.post('/searchproduct',//post request
+      const res = await axios.post('client/home/searchproduct',//post request
       JSON.stringify({link}),//include email and password
       {
         headers: { 'Content-Type': 'application/json' }

@@ -57,7 +57,7 @@ const RegisterScreen = () => {
     try{
       console.log("We are here 2");
       const res = await axios.post('/signup',//post request
-      JSON.stringify({email, password, name: firstName,lastname: lastName, nationality: "Lebanon", gender, city}),//include email and password
+      JSON.stringify({email, password, name: firstName,lastname: lastName, nationality: "Lebanon", gender, city, phone_number: phoneNumber}),//include email and password
       {
         headers: { 'Content-Type': 'application/json' }
       }

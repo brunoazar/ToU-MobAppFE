@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import axios from '../api/axios';
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
 
   
 
-  const handleResetPassword = () => {
+  const handleResetPassword = async () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isValid = emailRegex.test(email);
 
@@ -16,6 +17,24 @@ const ForgotPasswordScreen = ({ navigation }) => {
     }
     else{
         // Perform reset password logic here
+
+        try{
+          console.log("We are here 5");
+          const res = await axios.post('/forgot-password',//post request
+          JSON.stringify({email}),//include email
+          {
+            headers: { 'Content-Type': 'application/json' }
+          }
+          );
+          console.log(res.data);//for you to check what the server is responding with
+    
+          //send user to corresponding page
+    
+        }catch(err){
+    
+          console.log(err);
+        }
+
         Alert.alert('Password Reset', `An email has been sent to ${email} with instructions to reset your password.`);
         
         // Navigate to the login screen

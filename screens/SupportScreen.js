@@ -22,7 +22,7 @@ const SupportScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 20,
     flex: 1,
     backgroundColor: '#fff',
     padding: 16,

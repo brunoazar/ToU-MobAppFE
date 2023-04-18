@@ -38,6 +38,7 @@ const ApplyAsTravelerScreen = () => {
   const [cvData, setCvdata] = useState('');
   const [idData, setIddata] = useState('');
 
+  const [applyClicked, setApplyClicked] = useState(false);
   
   const navigation = useNavigation();
 
@@ -47,6 +48,12 @@ const ApplyAsTravelerScreen = () => {
   
   // new code for waiting 10 seconds before submitting
   const logRegister = () => {
+    // Logic to prevent multiple clicks on the button
+    if (applyClicked) {
+      Alert.alert('Please wait', 'Please wait while we process your application.');
+      return;
+    }
+    setApplyClicked(true);
     console.log('clicked Apply');
     Alert.alert('Uploading...', 'Please wait while we process your application.');
     setTimeout(handleRegister, 10000);
@@ -272,7 +279,19 @@ const ApplyAsTravelerScreen = () => {
       }
 
     }
-    
+     const handlePickCv = () => {
+      // logic to wait 5 seconds before picking cv
+      console.log('clicked CV');
+      Alert.alert('Uploading...', 'Please wait for a few seconds while we process your application.');
+      setTimeout(_pickCv, 5000);
+    };
+
+    const handlePickId = () => {
+      // logic to wait 5 seconds before picking id
+      console.log('clicked ID');
+      Alert.alert('Uploading...', 'Please wait for a few seconds while we process your application.');
+      setTimeout(_pickId, 5000);
+    };
   
 
   return (
@@ -379,10 +398,10 @@ const ApplyAsTravelerScreen = () => {
         
         
         <View style={styles.uploadContainer}>
-          <TouchableOpacity style={styles.uploadButton} onPress={_pickCv}>
+          <TouchableOpacity style={styles.uploadButton} onPress={handlePickCv}>
             <Text style={styles.uploadButtonText}>Upload CV as pdf</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.uploadButton} onPress={_pickId}>
+          <TouchableOpacity style={styles.uploadButton} onPress={handlePickId}>
             <Text style={styles.uploadButtonText}>Upload ID as pdf</Text>
           </TouchableOpacity>
         </View>
@@ -420,7 +439,7 @@ const ApplyAsTravelerScreen = () => {
 
 const styles = StyleSheet.create({
     container: {
-      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 ,
+      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 20 ,
       flexGrow: 1,
       alignItems: 'center',
       backgroundColor: '#fff',

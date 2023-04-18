@@ -343,7 +343,7 @@ const RegisterScreen = () => {
 
 const styles = StyleSheet.create({
     container: {
-      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 200,
       flexGrow: 1,
       alignItems: 'center',
       backgroundColor: '#fff',

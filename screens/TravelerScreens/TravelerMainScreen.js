@@ -14,8 +14,17 @@ const TravelerMainScreen = ({navigation}) => {
     const [ticketName, setTicketName] = useState("");
     const [ticketType, setTicketType] = useState("");
     const [ticketData, setTicketData] = useState("");
+    const [clickedUpload, setClickedUpload] = useState(false);
+
+    const [hasTicket, setHasTicket] = useState(false);
+
+    // api call to check if user has a ticket
 
     const handleTicketUploadClicked = async() => {
+      if (clickedUpload == true){
+        Alert.alert('Ticket already uploaded', 'You have already uploaded a ticket, please wait.');
+        return;
+      }
         _pickTicket();
         // BACKEND CODE TO UPLOAD TICKET TO DATABASE
         try{
@@ -34,10 +43,12 @@ const TravelerMainScreen = ({navigation}) => {
             });
       
             console.log(res.data);//for you to check what the server is responding with
-      
+            
             //send user to corresponding page
       
             //add what happens when uploaded successfully
+            setClickedUpload(true);
+            setHasTicket(true);
       
           }catch(err){
       
@@ -74,20 +85,47 @@ const TravelerMainScreen = ({navigation}) => {
           catch(e){
             console.log(e);
             return;
-          }}
+          }
+        };
+
+    const handleCancelTicket = () => {
+        // BACKEND CODE TO CANCEL TICKET IN DATABASE
+    };
+
+    // this is just a placeholder for now
+    // will be replaced with a api call to get the flight date
+    const flightDate = "2021-05-01";
+
+    const handleTravelerView = () => {
+      if (hasTicket == false){
+        return (<View style={styles.body}>
+          <Text style={styles.bodyText}>Upload Your Flight Ticket Here:</Text>
+          <Text style={styles.bodyText}>(PDF Only)</Text>
+          <TouchableOpacity style={styles.buttonContainer} onPress={handleTicketUploadClicked}>
+              <Text style={styles.buttonText}>Upload Ticket</Text>
+          </TouchableOpacity>
+      </View>
+      );
+      }
+      else{
+        return (<View style={styles.body}>
+          <Text style={styles.bodyText}>Your Flight Date:</Text>
+          <Text style={styles.bodyText}>{flightDate}</Text>
+          <TouchableOpacity style={styles.buttonContainer} onPress={handleCancelTicket}>
+              <Text style={styles.buttonText}>Cancel Ticket</Text>
+          </TouchableOpacity>
+      </View>
+      );
+      }
+    }
 
     return (
         <View style={styles.container}>
         <View style={styles.header}>
             <Text style={styles.headerText}>Traveler Main Screen</Text>
         </View>
-        <View style={styles.body}>
-            <Text style={styles.bodyText}>Upload Your Flight Ticket Here:</Text>
-            <Text style={styles.bodyText}>(PDF Only)</Text>
-            <TouchableOpacity style={styles.buttonContainer} onPress={handleTicketUploadClicked}>
-                <Text style={styles.buttonText}>Upload Ticket</Text>
-            </TouchableOpacity>
-        </View>
+        {handleTravelerView()//this handle whether to show the upload ticket or the cancel ticket button
+        }
         <BottomNav2 navigation={navigation} email={email} />
         </View>
     );

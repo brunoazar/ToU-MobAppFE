@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SettingsScreen = ({ navigation }) => {
 
@@ -49,6 +50,7 @@ const SettingsScreen = ({ navigation }) => {
       {
         text: 'Logout',
         onPress: () => {
+          AsyncStorage.removeItem('AccessToken');
           navigation.navigate('LoginScreen');
           // Perform API call to logout
         },

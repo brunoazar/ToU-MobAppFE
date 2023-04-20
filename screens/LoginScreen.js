@@ -15,6 +15,7 @@ import { useNavigation } from '@react-navigation/native';
 import RegisterScreen from './RegisterScreen';
 import ApplyAsTravelerScreen from './ApplyAsTravelerScreen';
 import PasteLinkScreen from './ClientScreens/PasteLinkScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -60,7 +61,7 @@ const LoginScreen = () => {
       console.log(res.data);//for you to check what the server is responding with
 
       //send user to corresponding page
-      checkLogin(res.status, res.data.type);
+      checkLogin(res.status, res.data.type, res);
 
     }catch(err){
 
@@ -97,18 +98,21 @@ const LoginScreen = () => {
     // }
   };
 
-  const checkLogin = (responseCode, userType) => {
+  const checkLogin = (responseCode, userType, result) => {
     // Handle login logic here
     if(responseCode == 200){
       Alert.alert('Login Successful');
+      AsyncStorage.setItem("AccessToken", result.data);
       if(userType == 'Traveler' || userType == 'traveler'){
         setPassword('');
         navigation.navigate("TravelerMainScreen", { email: email });
-      }else{
+      }
+      else{
         setPassword('');
         navigation.navigate("PasteLinkScreen", { email: email });
       }
-    }else if(responseCode == 403){
+    }
+    else if(responseCode == 403){
       Alert.alert('Account Blocked', 'Too many failed login attempts.');
     }
     else{

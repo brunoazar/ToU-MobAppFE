@@ -7,7 +7,7 @@ import { useRoute } from '@react-navigation/native';
 import axios from '../../api/axios';
 import ExchangeRateCard from '../../components/ExchangeRateCard';
 
-const PasteLinkScreen = ({ navigation }) => {
+const PasteLinkScreen = async ({ navigation }) => {
   const [link, setLink] = useState('');
   
   const route = useRoute();
@@ -60,15 +60,22 @@ const PasteLinkScreen = ({ navigation }) => {
     // JUST FOR TESTING
   }
 
-  const isValidUrl = (url) => {
+  const isValidUrl = async (url) => {
     // amazon URL validation using regular expression
     const pattern = /^https?:\/\/(?:www\.)?amazon\.com\/(?:[^/]+\/)*?(?:dp|gp\/product)\/[A-Za-z0-9]{10}(?:\/[^?#]*|$)/;
     return pattern.test(url);
   }
 
   // API to get the exchange rate
+  try{
+    const res = await axios.get('/getrate');
+    console.log(res.data);
+  }
+  catch{
+    console.log("Error");
+  }
   //currently just for testing:
-  const exchangeRate = "100,000.00";
+  const exchangeRate = res;
 
   return (
     <View style={styles.container}>

@@ -8,9 +8,28 @@ import { Ionicons } from '@expo/vector-icons';
 //importing fake data for testing
 import pendingProducts from '../../fake_data/pendingProducts'
 
-const PendingOrdersScreen = ({ navigation }) => {
+const PendingOrdersScreen = async ({ navigation }) => {
   const route = useRoute();
   const email = route.params.email;
+
+
+  try{
+    console.log("We are here 7");
+    const res = await axios.post('/client/home/pendingorders',//post request
+    {
+      headers: { 'Content-Type': 'application/json' }
+    }
+    );
+    console.log(res.data);//for you to check what the server is responding with
+
+    //add what you want to do with the response data here ///////ELIE////////
+
+  }catch(err){
+
+    console.log(err);
+  }
+
+
 
   //get list of json product objects from server (pending orders)
   const products = [];

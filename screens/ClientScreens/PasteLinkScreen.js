@@ -5,6 +5,7 @@ import { Platform, StatusBar} from 'react-native';
 import BottomNav from '../../components/BottomNav'; // Import the bottom navigation component
 import { useRoute } from '@react-navigation/native';
 import axios from '../../api/axios';
+import ExchangeRateCard from '../../components/ExchangeRateCard';
 
 const PasteLinkScreen = ({ navigation }) => {
   const [link, setLink] = useState('');
@@ -65,8 +66,14 @@ const PasteLinkScreen = ({ navigation }) => {
     return pattern.test(url);
   }
 
+  // API to get the exchange rate
+  //currently just for testing:
+  const exchangeRate = "100,000.00";
+
   return (
     <View style={styles.container}>
+      <ExchangeRateCard exchangeRate={exchangeRate} />
+
       <Text style={styles.label}>Paste your link here</Text>
       <TextInput
         style={styles.textBox}
@@ -99,6 +106,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#3274cb',
+    marginTop: 16,
     marginBottom: 16,
   },
   textBox: {

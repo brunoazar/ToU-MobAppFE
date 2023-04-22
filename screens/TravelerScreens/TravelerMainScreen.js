@@ -15,6 +15,7 @@ const TravelerMainScreen = ({navigation}) => {
     const [ticketType, setTicketType] = useState("");
     const [ticketData, setTicketData] = useState("");
     const [clickedUpload, setClickedUpload] = useState(false);
+    const [pickupLocation, setPickupLocation] = useState("");
 
     const [hasTicket, setHasTicket] = useState(false);
 
@@ -23,6 +24,10 @@ const TravelerMainScreen = ({navigation}) => {
     const handleTicketUploadClicked = async() => {
       if (clickedUpload == true){
         Alert.alert('Ticket already uploaded', 'You have already uploaded a ticket, please wait.');
+        return;
+      }
+      if (pickupLocation == ""){
+        Alert.alert('Pickup Location not set', 'Please set your pickup location before uploading a ticket.');
         return;
       }
         _pickTicket();
@@ -101,6 +106,14 @@ const TravelerMainScreen = ({navigation}) => {
         return (<View style={styles.body}>
           <Text style={styles.bodyText}>Upload Your Flight Ticket Here:</Text>
           <Text style={styles.bodyText}>(PDF Only)</Text>
+          <Text style={styles.bodyText}>Enter Your Pickup Location:</Text>
+          <TextInput
+            style={styles.textBox}
+            placeholder="Pickup Location"
+            onChangeText={setPickupLocation}
+            value={pickupLocation}
+            maxLength={200}
+          />
           <TouchableOpacity style={styles.buttonContainer} onPress={handleTicketUploadClicked}>
               <Text style={styles.buttonText}>Upload Ticket</Text>
           </TouchableOpacity>
@@ -124,7 +137,7 @@ const TravelerMainScreen = ({navigation}) => {
         <View style={styles.header}>
             <Text style={styles.headerText}>Traveler Main Screen</Text>
         </View>
-        {handleTravelerView()//this handle whether to show the upload ticket or the cancel ticket button
+        {handleTravelerView()//this handles whether to show the upload ticket or the cancel ticket button
         }
         <BottomNav2 navigation={navigation} email={email} />
         </View>
@@ -174,6 +187,16 @@ const styles = StyleSheet.create({
       buttonText: {
         fontSize: 14,
         color: 'white',
+      },
+      textBox: {
+        width: '100%',
+        height: 40,
+        borderColor: '#3274cb',
+        borderWidth: 1,
+        borderRadius: 8,
+        paddingHorizontal: 16,
+        marginBottom: 16,
+        marginTop: 8,
       },
 });
 export default TravelerMainScreen;

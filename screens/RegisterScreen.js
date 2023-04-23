@@ -233,6 +233,7 @@ const RegisterScreen = () => {
             onChangeText={setEmail}
             keyboardType="email-address"
             onBlur={validateEmail} // onBlur event for email validation
+            maxLength={50}
           />
           {!isValidEmail && <Text style={styles.errorTextEmail}>    Please enter a valid email address</Text>}
         
@@ -247,6 +248,7 @@ const RegisterScreen = () => {
                   value={password}
                   onChangeText={(text) => {setPassword(text); validatePassword}}
                   onBlur={validatePassword}
+                  maxLength={100}
                 />
                 <TouchableOpacity
                   style={styles2.eyeIconContainer}
@@ -272,6 +274,7 @@ const RegisterScreen = () => {
                 onChangeText={setPhoneNumber}
                 keyboardType="phone-pad"
                 onBlur={validatePhoneNumber}
+                maxLength={20}
               />
               {!isValidPhoneNumber && <Text style={styles.errorText}>Please enter a valid phone number</Text>}
               

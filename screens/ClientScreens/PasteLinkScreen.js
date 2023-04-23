@@ -106,7 +106,6 @@ const PasteLinkScreen = ({ navigation }) => {
         placeholder="Paste your link"
         onChangeText={setLink}
         value={link}
-        maxlength = {120}
       />
       <TouchableOpacity style={styles.button} onPress={handleCheckProduct}>
         <Text style={styles.buttonText}>Check Product</Text>

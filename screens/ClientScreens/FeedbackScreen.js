@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Platform, StatusBar} from 'react-native';
 import StarRating from 'react-native-star-rating-widget';
+import { useRoute } from '@react-navigation/native';
+
 
 const FeedbackScreen = ({ navigation }) => {
   const [orderArrived, setOrderArrived] = useState(null);
@@ -9,6 +11,8 @@ const FeedbackScreen = ({ navigation }) => {
   const [serviceCourteous, setServiceCourteous] = useState(null);
   const [comments, setComments] = useState('');
   const [rating, setRating] = useState(0);
+
+  const route = useRoute();
 
   const email= route.params.email;
   // email is passed from the previous screen to send the feedback from the user to the server
@@ -40,9 +44,6 @@ const FeedbackScreen = ({ navigation }) => {
       }
       );
       console.log(res.data);//for you to check what the server is responding with
-
-      //send user to corresponding page
-      checkLogin(res.status, res.data.type, res);
 
     }catch(err){
 

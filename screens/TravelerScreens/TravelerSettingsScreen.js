@@ -90,6 +90,8 @@ const SettingsScreen = ({ navigation }) => {
           style={styles.input}
           value={phoneNumber}
           onChangeText={handlePhoneNumberChange}
+          keyboardType="phone-pad"
+          maxLength={20}
         />
         
       </View>

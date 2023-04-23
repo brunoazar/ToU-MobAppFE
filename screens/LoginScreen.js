@@ -156,6 +156,7 @@ const LoginScreen = () => {
           placeholder="Email"
           value={email}
           onChangeText={(text) => setEmail(text)}
+          maxLength={50}
         />
         <TextInput
           style={styles.input}
@@ -163,6 +164,7 @@ const LoginScreen = () => {
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
+          maxLength={50}
         />
         <TouchableOpacity
           style={[

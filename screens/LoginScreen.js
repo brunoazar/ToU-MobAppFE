@@ -102,7 +102,7 @@ const LoginScreen = () => {
     // Handle login logic here
     if(responseCode == 200){
       Alert.alert('Login Successful');
-      AsyncStorage.setItem("AccessToken", result.data);
+      AsyncStorage.setItem("AccessToken", result.data.token);
       if(userType == 'Traveler' || userType == 'traveler'){
         setPassword('');
         navigation.navigate("TravelerMainScreen", { email: email });

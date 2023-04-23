@@ -23,7 +23,6 @@ const FeedbackScreen = ({ navigation }) => {
 
     // Perform form submission logic here
     console.log('Form submitted:', {
-      //ADD RATING /////ELIE/////
       orderArrived,
       itemAsDescribed,
       serviceCourteous,
@@ -35,7 +34,7 @@ const FeedbackScreen = ({ navigation }) => {
     try{
       console.log("We are here 8");
       const res = await axios.post('client/home/activeorder/' + orderID + '/markascomplete/feedback',//post request
-      JSON.stringify({rating, arrived_on_time: orderArrived, as_described: itemAsDescribed, good_service: serviceCourteous, message: comments}),//include email and password
+      JSON.stringify({rating, arrived_on_time: orderArrived, as_described: itemAsDescribed, good_service: serviceCourteous, message: comments}),
       {
         headers: { 'Content-Type': 'application/json' }
       }

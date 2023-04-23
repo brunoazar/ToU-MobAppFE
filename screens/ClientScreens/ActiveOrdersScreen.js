@@ -4,6 +4,9 @@ import { useRoute } from '@react-navigation/native';
 import { Platform, StatusBar} from 'react-native';
 import ActiveOrderCard from '../../components/ActiveOrderCard';
 import { Ionicons } from '@expo/vector-icons';
+import { useEffect, useState } from 'react';
+import axios from '../../api/axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // importing fake data for testing
 import activeProducts from '../../fake_data/activeProducts';
@@ -11,13 +14,51 @@ import activeProducts from '../../fake_data/activeProducts';
 const ActiveOrdersScreen = ({ navigation }) => {
   const route = useRoute();
   const email = route.params.email;
+  const [products, setProducts] = useState(null);
 
   //get list of json product objects from server (pending orders)
   // Backend API call to get active orders
   //const products = [];
 
+
+  const handleProducts = async () => {
+    try{
+      console.log("We are here 9");
+      const token = await AsyncStorage.getItem('AccessToken');
+      console.log(token);
+      const res = await axios.get('/client/home/activeorders',//post request
+      {
+        headers: { 'Content-Type': 'application/json' ,
+                    'Authorization': `Bearer ${token}`
+                  }
+      }
+      );
+      console.log(res.data.aorders);//for you to check what the server is responding with
+
+      return res.data.aorders;
+      
+
+    }catch(err){
+
+      console.log(err);
+    }
+  }
+
+  const getProducts = async () => {
+    const products =await handleProducts();
+    return products;
+  }
+  
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const products = await getProducts();
+      setProducts(products);
+    };
+    fetchProducts();
+  }, []);
+
   // Render each product as a ActiveOrderCard component
-  const renderProduct = ({ item }) => <ActiveOrderCard navigation={navigation} product={item} email={email} />;
+  const renderProduct = ({ item }) => {products && <ActiveOrderCard navigation={navigation} product={item} email={email} />};
 
   return (
     <View style={styles.container}>
@@ -28,7 +69,7 @@ const ActiveOrdersScreen = ({ navigation }) => {
         </View>
       </TouchableOpacity>
       <FlatList
-        data={activeProducts} // replace with actual active orders
+        data={products} // replace with actual active orders
         renderItem={renderProduct}
         keyExtractor={(item) => item.id.toString()}
       />

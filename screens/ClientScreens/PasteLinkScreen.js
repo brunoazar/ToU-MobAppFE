@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Linking, Alert, Image } from 'react-native';
 import ProductPage from './ProductPage';
 import { Platform, StatusBar} from 'react-native';
@@ -7,11 +8,12 @@ import { useRoute } from '@react-navigation/native';
 import axios from '../../api/axios';
 import ExchangeRateCard from '../../components/ExchangeRateCard';
 
-const PasteLinkScreen = async ({ navigation }) => {
+const PasteLinkScreen = ({ navigation }) => {
   const [link, setLink] = useState('');
+  const [exchangeRate, setExchangeRate] = useState(null);
   
   const route = useRoute();
-  const email = route.params.email;
+  const email = "chrisdaou3@gmail.com";
 
   // Example JSON object representing product details
   const product = {
@@ -67,19 +69,36 @@ const PasteLinkScreen = async ({ navigation }) => {
   }
 
   // API to get the exchange rate
-  try{
-    const res = await axios.get('/getrate');
-    console.log(res.data);
+  // try{
+  const handledollarrate = async () => {
+    try{
+      const res = await axios.post('/getrate',
+      {
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const exchangeRate = res.data.rate;
+      return exchangeRate;
+    }
+    catch(err){
+      console.log(err);
+    }
   }
-  catch{
-    console.log("Error");
+  const getExchangeRate = async () => {
+    const exchangeRate =await handledollarrate();
+    return exchangeRate;
   }
-  //currently just for testing:
-  const exchangeRate = res;
+  
+  useEffect(() => {
+    const fetchExchangeRate = async () => {
+      const rate = await getExchangeRate();
+      setExchangeRate(rate);
+    };
+    fetchExchangeRate();
+  }, []);
 
   return (
     <View style={styles.container}>
-      <ExchangeRateCard exchangeRate={exchangeRate} />
+      {exchangeRate && <ExchangeRateCard exchangeRate={exchangeRate} />}
 
       <Text style={styles.label}>Paste your link here</Text>
       <TextInput
@@ -87,6 +106,7 @@ const PasteLinkScreen = async ({ navigation }) => {
         placeholder="Paste your link"
         onChangeText={setLink}
         value={link}
+        maxlength = {120}
       />
       <TouchableOpacity style={styles.button} onPress={handleCheckProduct}>
         <Text style={styles.buttonText}>Check Product</Text>

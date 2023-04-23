@@ -4,6 +4,10 @@ import { Platform, StatusBar} from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import ActiveOrderCard2 from '../../components/traveler_components/ActiveOrderCard2';
 import { Ionicons } from '@expo/vector-icons';
+import { useEffect } from 'react';
+import axios from '../../api/axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 // importing fake data for testing
 import activeProducts from '../../fake_data/activeProducts';
@@ -11,13 +15,52 @@ import activeProducts from '../../fake_data/activeProducts';
 const ActiveOrdersScreen2 = ({navigation}) => {
     route = useRoute();
     const email = route.params.email;
+    const [products, setProducts] = useState([]);
+
 
     //get list of json product objects from server (pending orders)
     // Backend API call to get active orders
     //const products = [];
+
+    const handleProducts = async () => {
+        try{
+          console.log("We are here 10");
+          const token = await AsyncStorage.getItem('AccessToken');
+          console.log(token);
+          const res = await axios.get('/traveler/home/activeorders',
+          {
+            headers: { 
+                        'Content-Type': 'application/json' ,
+                        'Authorization': `Bearer ${token}`
+                      }
+          }
+          );
+    
+          return res.data.aorders;
+          
+    
+        }catch(err){
+    
+          console.log(err);
+        }
+      }
+    
+      const getProducts = async () => {
+        const products =await handleProducts();
+        return products;
+      }
+      
+      useEffect(() => {
+        const fetchProducts = async () => {
+          const products = await getProducts();
+          setProducts(products);
+        };
+        fetchProducts();
+      }, []);
+    
     
     // Render each product as a ActiveOrderCard component
-    const renderProduct = ({ item }) => <ActiveOrderCard2 product={item} />;
+    const renderProduct = ({ item }) => {products && <ActiveOrderCard2 product={item} />};
 
     return (
         <View style={styles.container}>
@@ -28,7 +71,7 @@ const ActiveOrdersScreen2 = ({navigation}) => {
                 </View>
             </TouchableOpacity>
             <FlatList
-                data={activeProducts} // replace with actual active orders
+                data={products} // replace with actual active orders
                 renderItem={renderProduct}
                 keyExtractor={(item) => item.id.toString()}
             />

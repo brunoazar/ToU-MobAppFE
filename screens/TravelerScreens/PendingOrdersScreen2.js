@@ -17,11 +17,43 @@ const PendingOrdersScreen2 = ({ navigation }) => {
   const [products, setProducts] = useState([]);
 
   //get list of json product objects from server (pending orders)
+
+  const handleProducts = async () => {
+    try{
+      console.log("We are here 11");
+      const token = await AsyncStorage.getItem('AccessToken');
+      console.log(token);
+      const res = await axios.get('/traveler/home/pendingorders',
+      {
+        headers: { 
+                    'Content-Type': 'application/json' ,
+                    'Authorization': `Bearer ${token}`
+                  }
+      }
+      );
+      return res.data.porders;
+    }catch(err){
+
+      console.log(err);
+    }
+  }
+
+  const getProducts = async () => {
+    const products =await handleProducts();
+    return products;
+  }
   
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const products = await getProducts();
+      setProducts(products);
+    };
+    fetchProducts();
+  }, []);
 
 
   // Render each product as a PendingOrderCard component
-  const renderProduct = ({ item }) => <PendingOrderCard2 product={item} />;
+  const renderProduct = ({ item }) => {products && <PendingOrderCard2 product={item} />};
 
   return (
     <View style={styles.container}>
@@ -32,7 +64,7 @@ const PendingOrdersScreen2 = ({ navigation }) => {
         </View>
       </TouchableOpacity>
       <FlatList
-        data={pendingProducts} // replace with actual pending orders
+        data={products} // replace with actual pending orders
         renderItem={renderProduct}
         keyExtractor={(item) => item.id.toString()}
       />

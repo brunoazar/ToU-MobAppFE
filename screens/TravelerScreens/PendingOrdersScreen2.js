@@ -31,6 +31,7 @@ const PendingOrdersScreen2 = ({ navigation }) => {
                   }
       }
       );
+      console.log(res.data)
       return res.data.porders;
     }catch(err){
 

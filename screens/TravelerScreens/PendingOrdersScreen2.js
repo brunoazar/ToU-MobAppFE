@@ -4,6 +4,9 @@ import { useRoute } from '@react-navigation/native';
 import { Platform, StatusBar} from 'react-native';
 import PendingOrderCard2 from '../../components/traveler_components/PendingOrderCard2';
 import { Ionicons } from '@expo/vector-icons';
+import { useEffect, useState } from 'react';
+import axios from '../../api/axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //importing fake data for testing
 import pendingProducts from '../../fake_data/pendingProducts'
@@ -11,9 +14,10 @@ import pendingProducts from '../../fake_data/pendingProducts'
 const PendingOrdersScreen2 = ({ navigation }) => {
   const route = useRoute();
   const email = route.params.email;
+  const [products, setProducts] = useState([]);
 
   //get list of json product objects from server (pending orders)
-  const products = [];
+  
 
 
   // Render each product as a PendingOrderCard component

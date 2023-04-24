@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView, TouchableOpacity } from 'react-native';
-import { useRoute } from '@react-navigation/native';
 import { Platform, StatusBar} from 'react-native';
 import PendingOrderCard from '../../components/PendingOrderCard';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,13 +7,9 @@ import { useEffect, useState } from 'react';
 import axios from '../../api/axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-//importing fake data for testing
-import pendingProducts from '../../fake_data/pendingProducts'
-
 const PendingOrdersScreen = ({ navigation }) => {
-  const route = useRoute();
+
   const [products, setProducts] = useState(null);
-  const email = "chrisdaou3@gmail.com";
 
   const handleProducts = async () => {
     try{
@@ -55,9 +50,7 @@ const PendingOrdersScreen = ({ navigation }) => {
 
 
   //get list of json product objects from server (pending orders)
-
-  //fake data for testing
-  //products = pedningProducts;
+  // Backend API call to get pending orders
 
   // Render each product as a PendingOrderCard component
   const renderProduct = ({ item }) => {products && <PendingOrderCard product={item} />};

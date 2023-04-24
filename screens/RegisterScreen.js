@@ -157,10 +157,6 @@ const RegisterScreen = () => {
     return true;
   }
 
-  const handleLinkPress = () => {
-    // Replace the URL with website agreement page URL
-    Linking.openURL('https://www.example.com/main-services-agreement');
-  };
 
   const validatePassword = () => {
     // Define the regex pattern for password validation
@@ -324,11 +320,8 @@ const RegisterScreen = () => {
           <View style={styles.container}>
             <View style={styles.textContainer}>
               <Text style={styles.agreementText}>
-                I agree to the {' '}
+                I agree to the main services agreement
               </Text>
-              <TouchableOpacity onPress={handleLinkPress}>
-                <Text style={styles.linkText}>main services agreement</Text>
-              </TouchableOpacity>
             </View>
           
           </View>

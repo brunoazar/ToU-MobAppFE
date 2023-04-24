@@ -4,7 +4,6 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Linking, Alert, Im
 import ProductPage from './ProductPage';
 import { Platform, StatusBar} from 'react-native';
 import BottomNav from '../../components/BottomNav'; // Import the bottom navigation component
-import { useRoute } from '@react-navigation/native';
 import axios from '../../api/axios';
 import ExchangeRateCard from '../../components/ExchangeRateCard';
 
@@ -12,8 +11,6 @@ const PasteLinkScreen = ({ navigation }) => {
   const [link, setLink] = useState('');
   const [exchangeRate, setExchangeRate] = useState(null);
   
-  const route = useRoute();
-  const email = "chrisdaou3@gmail.com";
 
   // Example JSON object representing product details
   const product = {
@@ -49,7 +46,7 @@ const PasteLinkScreen = ({ navigation }) => {
 
       //send user to corresponding page
       if(res.status == 200){
-        navigation.navigate('ProductPage', { product: res.data, email: email });
+        navigation.navigate('ProductPage', { product: res.data});
       }
 
     }catch(err){
@@ -57,9 +54,6 @@ const PasteLinkScreen = ({ navigation }) => {
       console.log(err);
     }
 
-    // JUST FOR TESTING
-    // navigation.navigate('ProductPage', { product: product, email: email }); // Redirect to the product page with the product details
-    // JUST FOR TESTING
   }
 
   const isValidUrl = async (url) => {
@@ -110,7 +104,7 @@ const PasteLinkScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.button} onPress={handleCheckProduct}>
         <Text style={styles.buttonText}>Check Product</Text>
       </TouchableOpacity>
-      <BottomNav navigation={navigation} email={email}/>
+      <BottomNav navigation={navigation} />
        
 
     </View>

@@ -205,10 +205,6 @@ const ApplyAsTravelerScreen = () => {
     return true;
   }
 
-  const handleLinkPress = () => {
-    // Replace the URL with website agreement page URL
-    Linking.openURL('https://www.example.com/main-services-agreement');
-  };
 
   const scrollViewRef = useRef(); // Ref for ScrollView
 
@@ -374,6 +370,7 @@ const ApplyAsTravelerScreen = () => {
     </View>
 
           <TextInput
+          maxLength={50}
             placeholder="Email"
             style={[styles.input, !isValidEmail && styles.inputError]}
             value={email}
@@ -391,6 +388,7 @@ const ApplyAsTravelerScreen = () => {
                 onChangeText={setPhoneNumber}
                 keyboardType="phone-pad"
                 onBlur={validatePhoneNumber}
+                maxLength={20}
               />
               {!isValidPhoneNumber && <Text style={styles.errorText}>Please enter a valid phone number</Text>}
               
@@ -417,11 +415,8 @@ const ApplyAsTravelerScreen = () => {
           <View style={styles.container}>
             <View style={styles.textContainer}>
               <Text style={styles.agreementText}>
-                I agree to the {' '}
+                I agree to the main services agreement
               </Text>
-              <TouchableOpacity onPress={handleLinkPress}>
-                <Text style={styles.linkText}>main services agreement</Text>
-              </TouchableOpacity>
             </View>
           
           </View>

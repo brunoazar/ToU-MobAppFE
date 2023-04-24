@@ -10,7 +10,6 @@ import {
   Alert,
   Linking,
 } from 'react-native';
-import { useRoute } from '@react-navigation/native';
 import lbCities from '../data/lbCities.json';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -28,8 +27,6 @@ const SettingsScreen = ({ navigation }) => {
   };
 
 
-  const route = useRoute();
-  const email = route.params.email;
   const [phoneNumber, setPhoneNumber] = useState(profileData.phoneNumber);
   const [city, setCity] = useState(profileData.city);
   const [isChangesSaved, setIsChangesSaved] = useState(true);
@@ -106,6 +103,7 @@ const SettingsScreen = ({ navigation }) => {
           style={styles.input}
           value={phoneNumber}
           onChangeText={handlePhoneNumberChange}
+          maxLength={20}
         />
         <Text style={styles.label}>Address:</Text>
         <Text style={styles.value}>Lebanon</Text>

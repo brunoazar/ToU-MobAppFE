@@ -7,8 +7,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 
 const TravelerMainScreen = ({navigation}) => {
-    route = useRoute();
-    const email = "chrisdaou@live.com";
+    const route = useRoute();
 
     const [ticketUri, setTicketUri] = useState("");
     const [ticketName, setTicketName] = useState("");
@@ -139,7 +138,7 @@ const TravelerMainScreen = ({navigation}) => {
         </View>
         {handleTravelerView()//this handles whether to show the upload ticket or the cancel ticket button
         }
-        <BottomNav2 navigation={navigation} email={email} />
+        <BottomNav2 navigation={navigation}/>
         </View>
     );
     };

@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView, TouchableOpacity } from 'react-native';
-import { useRoute } from '@react-navigation/native';
 import { Platform, StatusBar} from 'react-native';
 import ActiveOrderCard from '../../components/ActiveOrderCard';
 import { Ionicons } from '@expo/vector-icons';
@@ -12,8 +11,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import activeProducts from '../../fake_data/activeProducts';
 
 const ActiveOrdersScreen = ({ navigation }) => {
-  const route = useRoute();
-  const email = route.params.email;
   const [products, setProducts] = useState(null);
 
   //get list of json product objects from server (pending orders)
@@ -58,7 +55,7 @@ const ActiveOrdersScreen = ({ navigation }) => {
   }, []);
 
   // Render each product as a ActiveOrderCard component
-  const renderProduct = ({ item }) => {products && <ActiveOrderCard navigation={navigation} product={item} email={email} />};
+  const renderProduct = ({ item }) => {products && <ActiveOrderCard navigation={navigation} product={item} />};
 
   return (
     <View style={styles.container}>

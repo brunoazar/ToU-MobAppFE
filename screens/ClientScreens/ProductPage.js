@@ -11,7 +11,6 @@ const ProductPage = ({ navigation }) => {
 
     // Extract the product object from the navigation parameters
     const product = route.params.product;
-    const email = route.params.email;
 
      // Function to handle "Request Product" button press
     const handleRequestProduct = () => {
@@ -32,7 +31,7 @@ const ProductPage = ({ navigation }) => {
     const handleCancelProduct = () => {
         Alert.alert('Product Request Cancelled', 'Your request has been cancelled');
         //navigate to pastelinkscreen
-        navigation.navigate('PasteLinkScreen', { email: email });
+        navigation.navigate('PasteLinkScreen');
         return;
     };
 

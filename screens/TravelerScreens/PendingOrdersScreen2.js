@@ -13,7 +13,6 @@ import pendingProducts from '../../fake_data/pendingProducts'
 
 const PendingOrdersScreen2 = ({ navigation }) => {
   const route = useRoute();
-  const email = route.params.email;
   const [products, setProducts] = useState([]);
 
   //get list of json product objects from server (pending orders)

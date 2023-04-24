@@ -13,8 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import activeProducts from '../../fake_data/activeProducts';
 
 const ActiveOrdersScreen2 = ({navigation}) => {
-    route = useRoute();
-    const email = route.params.email;
+    const route = useRoute();
     const [products, setProducts] = useState([]);
 
 

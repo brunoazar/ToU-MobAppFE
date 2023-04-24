@@ -10,7 +10,6 @@ import {
   Alert,
   Linking,
 } from 'react-native';
-import { useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -26,8 +25,6 @@ const SettingsScreen = ({ navigation }) => {
   };
 
 
-  const route = useRoute();
-  const email = route.params.email;
   const [phoneNumber, setPhoneNumber] = useState(profileData.phoneNumber);
   const [isChangesSaved, setIsChangesSaved] = useState(true);
 

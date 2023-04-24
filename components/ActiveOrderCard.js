@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Alert} from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 
-const ActiveOrderCard = ({ navigation, product, email }) => {
+const ActiveOrderCard = ({ navigation, product}) => {
   const [url, setUrl] = useState(product.url);
   const [status, setStatus] = useState(product.status);
 
@@ -20,7 +20,7 @@ const ActiveOrderCard = ({ navigation, product, email }) => {
   const afterCompletion = () => {
     // Backend call to mark order as complete
     // Update the order status in the database through the API
-    navigation.navigate('FeedbackScreen', {email: email, orderID: product.id});
+    navigation.navigate('FeedbackScreen', { orderID: product.id});
   };
 
   const handleOrderComplete = () =>

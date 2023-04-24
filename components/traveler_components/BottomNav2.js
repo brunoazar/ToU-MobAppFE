@@ -8,14 +8,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation  } from '@react-navigation/native';
 
 
-const BottomNav2 = ({navigation, email}) => {
+const BottomNav2 = ({navigation}) => {
 
-  route = useRoute();
-  //const email = route.params.email;
+  const route = useRoute();
   
   // Function to handle navigation to different screens
   const handleNavigation = (screenName) => {
-    navigation.navigate(screenName, { email: email });
+    navigation.navigate(screenName);
   };
 
   return (

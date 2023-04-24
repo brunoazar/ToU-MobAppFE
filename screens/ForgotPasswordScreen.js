@@ -55,6 +55,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
           autoCapitalize="none"
           value={email}
           onChangeText={setEmail}
+          maxLength={50}
         />
       </View>
       <TouchableOpacity style={styles.button} onPress={handleResetPassword}>

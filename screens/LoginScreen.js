@@ -68,34 +68,6 @@ const LoginScreen = () => {
       console.log(err);
     }
 
-
-    
-    // Backend code for login
-    // navigate to the appropriate screen based on the user type using checkLogin function below
-    // BACKEND DEVELOPER: uncomment the code below and replace the dummy code with your own
-
-    // try {
-    //   //backend code for login
-    //   const response = await fetch('http://localhost:5000/login', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({
-    //       email,
-    //       password,
-    //     }),
-    //   });
-  
-    //   if (!response.ok) {
-    //     throw new Error('Failed to login');
-    //   }
-  
-    //   // TODO: handle successful login using checkLogin function below
-    // } catch (error) {
-    //   console.log(error);
-    //   // TODO: handle login error using checkLogin function below
-    // }
   };
 
   const checkLogin = (responseCode, userType, result) => {
@@ -105,11 +77,11 @@ const LoginScreen = () => {
       AsyncStorage.setItem("AccessToken", result.data.token);
       if(userType == 'Traveler' || userType == 'traveler'){
         setPassword('');
-        navigation.navigate("TravelerMainScreen", { email: email });
+        navigation.navigate("TravelerMainScreen");
       }
       else{
         setPassword('');
-        navigation.navigate("PasteLinkScreen", { email: email });
+        navigation.navigate("PasteLinkScreen");
       }
     }
     else if(responseCode == 403){

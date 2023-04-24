@@ -6,7 +6,6 @@ import { Ionicons } from '@expo/vector-icons';
 
 const SupportScreen = ({ navigation }) => {
   const route = useRoute();
-  const email = route.params.email;
 
   return (
     <View style={styles.container}>

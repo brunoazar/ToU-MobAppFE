@@ -14,8 +14,6 @@ const FeedbackScreen = ({ navigation }) => {
 
   const route = useRoute();
 
-  const email= route.params.email;
-  // email is passed from the previous screen to send the feedback from the user to the server
   const orderID= route.params.orderID;
 
   const handleFormSubmit = async () => {
@@ -50,7 +48,7 @@ const FeedbackScreen = ({ navigation }) => {
       console.log(err);
     }
 
-    navigation.navigate('PasteLinkScreen', {email: email});
+    navigation.navigate('PasteLinkScreen');
   };
 
   

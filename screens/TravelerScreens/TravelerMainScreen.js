@@ -8,7 +8,7 @@ import * as FileSystem from 'expo-file-system';
 
 const TravelerMainScreen = ({navigation}) => {
     route = useRoute();
-    const email = route.params.email;
+    const email = "chrisdaou@live.com";
 
     const [ticketUri, setTicketUri] = useState("");
     const [ticketName, setTicketName] = useState("");

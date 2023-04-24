@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from '../api/axios';
 
 const SplashScreen = ({ navigation }) => {
   useEffect(() => {
@@ -11,19 +12,36 @@ const SplashScreen = ({ navigation }) => {
   }, []);
 
   const handleGetToken = async () => {
-    const dataToken = await AsyncStorage.getItem('AccessToken');
-    if(!dataToken){
-      navigation.replace('LoginScreen');
-    }
-    else{
-      if (dataToken.type === 'traveler'){
-        navigation.replace('TravelerMainScreen');
+    try{
+      const token = await AsyncStorage.getItem('AccessToken');
+      if(!token){
+        navigation.replace('LoginScreen');
       }
       else{
-        navigation.replace('PasteLinkScreen');
+        console.log("hi")
+        const res = await axios.get('/checktokenmobile', {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        console.log(res)
+        if (res.data.status == 691){
+          navigation.replace('PasteLinkScreen');
+        }
+        else if(res.data.status == 690){
+          navigation.replace('TravelerMainScreen');
+        }
+        else{
+          navigation.replace('LoginScreen');
+        }
       }
     }
+    catch(err){
+      console.log(err);
+    }
   }
+
 
   return (
     <View style={styles.container}>

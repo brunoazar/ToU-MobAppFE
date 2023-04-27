@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import ProductCard from '../../components/ProductCard'; // Import the ProductCard component
 //import useRoute:
 import { useRoute } from '@react-navigation/native';
+import axios from '../../api/axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProductPage = ({ navigation }) => {
     const [quantity, setQuantity] = useState(1); // State variable to store the quantity of the product [1 by default]
@@ -13,10 +15,28 @@ const ProductPage = ({ navigation }) => {
     const product = route.params.product;
 
      // Function to handle "Request Product" button press
-    const handleRequestProduct = () => {
+    const handleRequestProduct = async () => {
         // Implement your logic here for handling the request product action
         //BACKEND CODE FOR REQUESTING PRODUCT
-        Alert.alert('Product Requested','Your request is now pending, keep an eye on your email (junk/spam folders) for updates');
+
+        try{
+            const token = await AsyncStorage.getItem('AccessToken');
+            const res = await axios.post('client/home/searchproduct/'+product.asin+"/"+quantity,//post request
+            JSON.stringify({data: product}),//include email and password
+            {
+              headers: { 'Content-Type': 'application/json' },
+              'Authorization': `Bearer ${token}`
+            }
+            );
+            console.log(res.data);//for you to check what the server is responding with
+      
+            if(res.status == 200){
+              Alert.alert('Product Requested','Your request is now pending, keep an eye on your email (junk/spam folders) for updates');
+            }
+        }
+        catch(err){
+            console.log(err);
+        }
     };
 
     const increment = () => {

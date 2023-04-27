@@ -1,11 +1,60 @@
-import React from 'react';
-import { Platform, StatusBar, TouchableOpacity} from 'react-native';
-import { View, Text, StyleSheet } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, Alert, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { Picker } from '@react-native-picker/picker';
 
-const SupportScreen = ({ navigation }) => {
-  const route = useRoute();
+const SupportScreen = ({navigation}) => {
+  const [problemType, setProblemType] = useState(null);
+  const [inquiry, setInquiry] = useState('');
+
+  const handleProblemTypeSelect = (type) => {
+    setProblemType(type);
+  };
+
+  const handleInquiryChange = (text) => {
+    setInquiry(text);
+  };
+
+  const handleSendInquiry = () => {
+    if (!problemType) {
+      Alert.alert('Please select a problem type');
+      return;
+    }
+    if (!inquiry) {
+      Alert.alert('Please enter your inquiry');
+      return;
+    }
+    // send inquiry logic here
+  };
+
+  const renderProblemFix = () => {
+    switch (problemType) {
+      case 'problem1':
+        return (
+          <>
+            <Text style={styles.titleText}>The app is crashing:</Text>
+            <Text style={styles.fixText}>Try uninstalling and reinstalling the app. If the problem persists, please contact our support team for further assistance.
+         </Text>
+          </>
+        );
+      case 'problem2':
+        return (
+          <>
+            <Text style={styles.titleText}>I'm unable to log in to my account:</Text>
+            <Text style={styles.fixText}>Make sure you're entering the correct email and password. If you've forgotten your password, use the "Forgot Password" feature to reset it. If you're still unable to log in, please contact our support team for further assistance.</Text>
+          </>
+        );
+      case 'problem3':
+        return (
+          <>
+            <Text style={styles.titleText}>I'm not receiving any notifications:</Text>
+            <Text style={styles.fixText}>Make sure you are looged into your email on your phone with the same email your are using in the app. Also, make sure our email is not in the junk/spam folder. If you're still not receiving notifications, please contact our support team for further assistance.</Text>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -15,9 +64,34 @@ const SupportScreen = ({ navigation }) => {
           <Ionicons name="ios-close" size={28} color="#3274cb" />
         </View>
       </TouchableOpacity>
+      <Text style={styles.titleText}>Select a problem type:</Text>
+      <Picker
+        selectedValue={problemType}
+        onValueChange={(value) => handleProblemTypeSelect(value)}
+        style={styles.button}
+      >
+        <Picker.Item label="Select a problem" value={null} />
+        <Picker.Item label="The app is crashing" value="problem1" />
+        <Picker.Item label="I'm unable to log in to my account" value="problem2" />
+        <Picker.Item label="I'm not receiving any notifications" value="problem3" />
+      </Picker>
+      {problemType && (
+        <>
+          {renderProblemFix()}
+          <TextInput
+            style={{ height: 100, borderColor: 'gray', borderWidth: 1, marginBottom: 20, padding: 10 }}
+            placeholder="Enter your inquiry here"
+            value={inquiry}
+            onChangeText={(text) => handleInquiryChange(text)}
+          />
+          <Button title="Send Inquiry" onPress={handleSendInquiry} color="#3274cb" />
+        </>
+      )}
     </View>
   );
 };
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -47,6 +121,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  button: {
+    backgroundColor: '#ebebeb',
+    borderRadius: 5,
+    padding: 10,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  titleText: {
+    textAlignVertical: 'center',
+    fontWeight: 'bold',
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
+  fixText: {
+    color: 'black',
+    fontSize: 14,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
 });
-
 export default SupportScreen;

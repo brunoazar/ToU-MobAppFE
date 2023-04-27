@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'grey',
   },
   timelineStageText: {
-    fontSize: 8,
+    fontSize: 7,
     color: 'black',
     marginTop: 5,
     fontWeight: 'bold',

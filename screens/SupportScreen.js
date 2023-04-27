@@ -48,7 +48,7 @@ const SupportScreen = ({navigation}) => {
         return (
           <>
             <Text style={styles.titleText}>I'm not receiving any notifications:</Text>
-            <Text style={styles.fixText}>Make sure you are looged into your email on your phone with the same email your are using in the app. Also, make sure our email is not in the junk/spam folder. If you're still not receiving notifications, please contact our support team for further assistance.</Text>
+            <Text style={styles.fixText}>Make sure you are logged into your email on your phone with the same email your are using in the app. Also, make sure our email is not in the junk/spam folder. If you're still not receiving notifications, please contact our support team for further assistance.</Text>
           </>
         );
       default:

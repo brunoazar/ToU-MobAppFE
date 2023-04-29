@@ -33,7 +33,7 @@ const [city, setCity] = useState(null);
                 }
       }
       );
-      AsyncStorage.setItem("AccessToken", res.data.token);
+      await AsyncStorage.setItem("AccessToken", res.data.token);
       return ({firstName: res.data.client.name, 
                       lastName: res.data.client.lastname,
                       phoneNumber: res.data.client.phone_number,

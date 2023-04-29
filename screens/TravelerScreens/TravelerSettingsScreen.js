@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Platform, StatusBar, Modal} from 'react-native';
 import {
   View,
@@ -12,23 +12,48 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from '../../api/axios';
 
 const SettingsScreen = ({ navigation }) => {
 
-  // Dummy data, replace with data from the backend
-  const profileData = {
-    firstName: 'Ali',
-    lastName: 'Doe',
-    phoneNumber: '70123456',
-    gender: 'M',
-    nationality: 'Lebanon',
-  };
-
-
-  const [phoneNumber, setPhoneNumber] = useState(profileData.phoneNumber);
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [isChangesSaved, setIsChangesSaved] = useState(true);
+  const [profileData,setProfileData] = useState(null)
 
+  const handleProfile = async() =>{
+    try{
+      const token = await AsyncStorage.getItem('AccessToken');
+      const res = await axios.get('/profile',
+      {
+        headers : {'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                  }
+      }
+    );
+    await AsyncStorage.setItem("AccessToken", res.data.token);
+    console.log(res.data)
+    return ({firstName: res.data.trav.name,
+                    lastName: res.data.trav.lastname,
+                    phoneNumber: res.data.trav.phone,
+                    gender: res.data.trav.gender,
+                    nationality: res.data.trav.nationality});
 
+  }
+  catch(err){
+    console.log(err)
+  }
+}
+
+useEffect(() =>{
+  const fetchProfile = async () => {
+    const profile = await handleProfile();
+    setProfileData(profile);
+    console.log(profile)
+    setPhoneNumber(profile.phoneNumber);
+  };
+  fetchProfile();
+},[]);
+  
   function onBackPressed(){
     navigation.goBack()
   }
@@ -46,19 +71,52 @@ const SettingsScreen = ({ navigation }) => {
       },
       {
         text: 'Logout',
-        onPress: () => {
-          AsyncStorage.removeItem('AccessToken');
-          navigation.navigate('LoginScreen');
+        onPress: async () => {
+          try{
+            const token = await AsyncStorage.getItem('AccessToken');
+            const res = await axios.post('/logout',{},
+            {
+              headers: {'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`}
+            }
+            );
+            console.log(res)
+        }
+          catch(err){
+            console.log(err)
+          }
+          await AsyncStorage.removeItem('AccessToken');
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'LoginScreen' }],
+          });
           // Perform API call to logout
         },
       },
     ]);
   }
 
-  const handleSubmitChanges = () => {
+  const handleSubmitChanges = async () => {
     // Perform API call to submit changes to the backend
     // Assuming a successful API call, set isChangesSaved to true
+
     if(!isChangesSaved){
+
+      try{
+        const token = await AsyncStorage.getItem('AccessToken');
+        const res = await axios.post('/profile/edit',
+        {phone: phoneNumber},
+        {
+          headers: {'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`}
+        }
+        );
+        await AsyncStorage.setItem("AccessToken", res.data.token);
+      }
+      catch(err){
+        console.log(err)
+      }
+
       setIsChangesSaved(true);
       Alert.alert('Changes Saved', 'Your changes have been saved successfully.');
       navigation.goBack();
@@ -75,13 +133,13 @@ const SettingsScreen = ({ navigation }) => {
       </TouchableOpacity>
       <View style={styles.profileDataContainer}>
         <Text style={styles.label}>First Name:</Text>
-        <Text style={styles.value}>{profileData.firstName}</Text>
+        {profileData && <Text style={styles.value}>{profileData.firstName}</Text>}
         <Text style={styles.label}>Last Name:</Text>
-        <Text style={styles.value}>{profileData.lastName}</Text>
+        {profileData && <Text style={styles.value}>{profileData.lastName}</Text>}
         <Text style={styles.label}>Gender:</Text>
-        <Text style={styles.value}>{profileData.gender}</Text>
+        {profileData && <Text style={styles.value}>{profileData.gender}</Text>}
         <Text style={styles.label}>Nationality:</Text>
-        <Text style={styles.value}>{profileData.nationality}</Text>
+        {profileData && <Text style={styles.value}>{profileData.nationality}</Text>}
         <Text style={styles.label}>Phone Number:</Text>
         <TextInput
           style={styles.input}

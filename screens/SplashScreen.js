@@ -27,9 +27,11 @@ const SplashScreen = ({ navigation }) => {
         });
         console.log(res)
         if (res.data.status == 691){
+          await AsyncStorage.setItem("AccessToken", res.data.token);
           navigation.replace('PasteLinkScreen');
         }
         else if(res.data.status == 690){
+          await AsyncStorage.setItem("AccessToken", res.data.token);
           navigation.replace('TravelerMainScreen');
         }
         else{
@@ -39,6 +41,7 @@ const SplashScreen = ({ navigation }) => {
     }
     catch(err){
       console.log(err);
+      navigation.replace('LoginScreen')
     }
   }
 

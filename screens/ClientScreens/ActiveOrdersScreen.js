@@ -30,6 +30,7 @@ const ActiveOrdersScreen = ({ navigation }) => {
                   }
       }
       );
+      AsyncStorage.setItem("AccessToken", res.data[0].token);
       const list = []
       const pr = res.data[0].aorders
       for(let i=0;i<res.data[0].aorders.length;i++){

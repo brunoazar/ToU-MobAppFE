@@ -30,7 +30,8 @@ const PendingOrdersScreen2 = ({ navigation }) => {
                   }
       }
       );
-
+      AsyncStorage.setItem("AccessToken",res.data[0].token)
+      console.log(res.data)
       const list = []
       const pr = res.data[0].porders
       for(let i=0;i<res.data[0].porders.length;i++){
@@ -44,15 +45,10 @@ const PendingOrdersScreen2 = ({ navigation }) => {
       console.log(err);
     }
   }
-
-  const getProducts = async () => {
-    const products =await handleProducts();
-    return products;
-  }
   
   useEffect(() => {
     const fetchProducts = async () => {
-      const products = await getProducts();
+      const products = await handleProducts();
       setProducts(products);
     };
     fetchProducts();

@@ -34,6 +34,7 @@ const ActiveOrdersScreen2 = ({navigation}) => {
                       }
           }
           );
+          AsyncStorage.setItem("AccessToken", res.data[0].token)
           const list = []
           const pr = res.data[0].aorders
           for(let i=0;i<res.data[0].aorders.length;i++){
@@ -41,22 +42,14 @@ const ActiveOrdersScreen2 = ({navigation}) => {
           }
           console.log(list)
           return list;
-          
-    
         }catch(err){
-    
           console.log(err);
         }
-      }
-    
-      const getProducts = async () => {
-        const products =await handleProducts();
-        return products;
       }
       
       useEffect(() => {
         const fetchProducts = async () => {
-          const products = await getProducts();
+          const products = await handleProducts();
           setProducts(products);
         };
         fetchProducts();

@@ -17,7 +17,7 @@ const SettingsScreen = ({ navigation }) => {
 
   // Dummy data, replace with data from the backend
   const profileData = {
-    firstName: 'John',
+    firstName: 'Ali',
     lastName: 'Doe',
     phoneNumber: '70123456',
     gender: 'M',

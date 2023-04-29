@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Platform, StatusBar, Modal} from 'react-native';
 import {
   View,
@@ -13,19 +13,44 @@ import {
 import lbCities from '../data/lbCities.json';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from '../api/axios';
 
-const SettingsScreen = ({ navigation }) => {
+const SettingsScreen = async ({ navigation }) => {
+
+const[profileData,setProfileData] = useState({})
+
 
   // Dummy data, replace with data from the backend
-  const profileData = {
-    firstName: 'John',
-    lastName: 'Doe',
-    phoneNumber: '70123456',
-    city: 'Beirut',
-    gender: 'M',
-    nationality: 'Lebanon',
-  };
+  const handleProfile = async() =>{
+    try{
+      const token = await AsyncStorage.getItem('AccessToken');
+      const res = await axios.get('/client/home/profile',
+      {
+        headers: {'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+                }
+      }
+      );
+      console.log(res)
+      return ({firstName: res.data.name, 
+                      lastName: res.data.lastname,
+                      phoneNumber: res.data.phone_number,
+                      city: res.data.city,
+                      gender: res.data.gender,
+                      nationality: res.data.nationality});
+    }
+    catch(err){
+      console.log(err)
+    }
+}
 
+useEffect(() => {
+  const fetchProfile = async () => {
+    const profile = await handleProfile();
+    setProfileData(profile);
+  };
+  fetchProfile();
+}, []);
 
   const [phoneNumber, setPhoneNumber] = useState(profileData.phoneNumber);
   const [city, setCity] = useState(profileData.city);
@@ -74,6 +99,9 @@ const SettingsScreen = ({ navigation }) => {
   const handleSubmitChanges = () => {
     // Perform API call to submit changes to the backend
     // Assuming a successful API call, set isChangesSaved to true
+
+
+
     if(!isChangesSaved){
       setIsChangesSaved(true);
       Alert.alert('Changes Saved', 'Your changes have been saved successfully.');
@@ -91,13 +119,13 @@ const SettingsScreen = ({ navigation }) => {
       </TouchableOpacity>
       <View style={styles.profileDataContainer}>
         <Text style={styles.label}>First Name:</Text>
-        <Text style={styles.value}>{profileData.firstName}</Text>
+        {profileData && <Text style={styles.value}>{profileData.firstName}</Text>}
         <Text style={styles.label}>Last Name:</Text>
-        <Text style={styles.value}>{profileData.lastName}</Text>
+        {profileData && <Text style={styles.value}>{profileData.lastName}</Text>}
         <Text style={styles.label}>Gender:</Text>
-        <Text style={styles.value}>{profileData.gender}</Text>
+        {profileData && <Text style={styles.value}>{profileData.gender}</Text>}
         <Text style={styles.label}>Nationality:</Text>
-        <Text style={styles.value}>{profileData.nationality}</Text>
+        {profileData && <Text style={styles.value}>{profileData.nationality}</Text>}
         <Text style={styles.label}>Phone Number:</Text>
         <TextInput
           style={styles.input}

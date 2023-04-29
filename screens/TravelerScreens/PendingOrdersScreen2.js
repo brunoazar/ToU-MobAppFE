@@ -30,8 +30,15 @@ const PendingOrdersScreen2 = ({ navigation }) => {
                   }
       }
       );
-      console.log(res.data)
-      return res.data.porders;
+
+      const list = []
+      const pr = res.data[0].porders
+      for(let i=0;i<res.data[0].porders.length;i++){
+        list.push({id: pr[i].order._id, title: pr[i].product.title, price: pr[i].product.price, image: pr[i].product.image, url: pr[i].product.url, inStock: pr[i].product.inStock, status: pr[i].order.status})
+      }
+      console.log(list)
+      return list;
+
     }catch(err){
 
       console.log(err);

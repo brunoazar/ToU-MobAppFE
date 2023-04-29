@@ -21,11 +21,13 @@ const ProductPage = ({ navigation }) => {
 
         try{
             const token = await AsyncStorage.getItem('AccessToken');
+            console.log('client/home/searchproduct/'+product.asin+"/"+quantity)
             const res = await axios.post('client/home/searchproduct/'+product.asin+"/"+quantity,//post request
             JSON.stringify({data: product}),//include email and password
             {
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 'Content-Type': 'application/json' ,
               'Authorization': `Bearer ${token}`
+              }
             }
             );
             console.log(res.data);//for you to check what the server is responding with

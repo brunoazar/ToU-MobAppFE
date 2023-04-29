@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Alert} from 'react-native';
 import * as Clipboard from 'expo-clipboard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from '../api/axios';
 
 const ActiveOrderCard = ({ navigation, product}) => {
   const [url, setUrl] = useState(product.url);
   const [status, setStatus] = useState(product.status);
-
 
   const handleCompleteClicked = () => {
     if(status === "6") {
@@ -17,10 +18,24 @@ const ActiveOrderCard = ({ navigation, product}) => {
     }
   };
 
-  const afterCompletion = () => {
+  const afterCompletion = async () => {
     // Backend call to mark order as complete
-    // Update the order status in the database through the API
-    navigation.navigate('FeedbackScreen', { orderID: product.id});
+    // try{
+    //   const token = await AsyncStorage.getItem('token');
+    //   const response = await axios.post('/client/home/activeorder/', {
+    //     orderID: product.id
+    //   }, {
+    //     headers: {
+    //       Authorization: 'Bearer ' + token
+    //     }
+    //   });
+    //   console.log(response);
+    // }
+    // catch(err){
+    //   console.log(err);
+    // }
+    // // Update the order status in the database through the API
+    // navigation.navigate('FeedbackScreen', { orderID: product.id});
   };
 
   const handleOrderComplete = () =>
@@ -66,7 +81,7 @@ const ActiveOrderCard = ({ navigation, product}) => {
       <Image source={{ uri: product.image }} style={styles.image} />
       <View style={styles.detailsContainer}>
         <Text style={styles.title}>{product.title}</Text>
-        <Text style={styles.price}>${product.price}</Text>
+        <Text style={styles.price}>{product.price}</Text>
         <Text style={styles.stockStatus}>{product.inStock ? 'In Stock' : 'Out of Stock'}</Text>
         {
         //renderTimelineStages2(product.status)

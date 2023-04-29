@@ -42,9 +42,9 @@ const PendingProductCard = ({ product }) => {
       <Image source={{ uri: product.image }} style={styles.image} />
       <View style={styles.detailsContainer}>
         <Text style={styles.title}>{product.title}</Text>
-        <Text style={styles.price}>${product.price}</Text>
+        <Text style={styles.price}>{product.price}</Text>
         <Text style={product.inStock ? styles.inStock : styles.outOfStock}>
-          {product.inStock === "true" ? 'In Stock' : 'Out of Stock'}
+          {product.inStock == true ? 'In Stock' : 'Out of Stock'}
         </Text>
         <TouchableOpacity onPress={() => Clipboard.setStringAsync(url)} style={styles.buttonContainer}>
           <Text style={styles.buttonText}>Copy Link</Text>

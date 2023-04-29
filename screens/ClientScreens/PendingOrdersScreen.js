@@ -23,9 +23,14 @@ const PendingOrdersScreen = ({ navigation }) => {
                   }
       }
       );
-      console.log(res.data.porders);//for you to check what the server is responding with
+      const list = []
+      const pr = res.data[0].porders
+      for(let i=0;i<res.data[0].porders.length;i++){
+        list.push({id: pr[i].order._id, title: pr[i].product.title, price: pr[i].product.price, image: pr[i].product.image, url: pr[i].product.url, inStock: pr[i].product.inStock})
+      }
+      console.log(list)
 
-      return res.data.porders;
+      return list;
 
     }catch(err){
 
@@ -34,14 +39,13 @@ const PendingOrdersScreen = ({ navigation }) => {
   }
 
 
-  const getProducts = async () => {
-    const products =await handleProducts();
-    return products;
-  }
+
+  
+
   
   useEffect(() => {
     const fetchProducts = async () => {
-      const products = await getProducts();
+      const products = await handleProducts();
       setProducts(products);
     };
     fetchProducts();
@@ -53,7 +57,7 @@ const PendingOrdersScreen = ({ navigation }) => {
   // Backend API call to get pending orders
 
   // Render each product as a PendingOrderCard component
-  const renderProduct = ({ item }) => {products && <PendingOrderCard product={item} />};
+  const renderProduct = ({ item }) =>  <PendingOrderCard product={item} />;
 
   return (
     <View style={styles.container}>
@@ -66,7 +70,7 @@ const PendingOrdersScreen = ({ navigation }) => {
       <FlatList
         data={products} // replace with actual pending orders
         renderItem={renderProduct}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id}
       />
     </View>
   );

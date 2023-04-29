@@ -15,9 +15,11 @@ import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from '../api/axios';
 
-const SettingsScreen = async ({ navigation }) => {
+const SettingsScreen = ({ navigation }) => {
 
-const[profileData,setProfileData] = useState({})
+const[profileData,setProfileData] = useState(null)
+const [phoneNumber, setPhoneNumber] = useState(null);
+const [city, setCity] = useState(null);
 
 
   // Dummy data, replace with data from the backend
@@ -31,13 +33,13 @@ const[profileData,setProfileData] = useState({})
                 }
       }
       );
-      console.log(res)
-      return ({firstName: res.data.name, 
-                      lastName: res.data.lastname,
-                      phoneNumber: res.data.phone_number,
-                      city: res.data.city,
-                      gender: res.data.gender,
-                      nationality: res.data.nationality});
+      AsyncStorage.setItem("AccessToken", res.data.token);
+      return ({firstName: res.data.client.name, 
+                      lastName: res.data.client.lastname,
+                      phoneNumber: res.data.client.phone_number,
+                      city: res.data.client.city,
+                      gender: res.data.client.gender,
+                      nationality: res.data.client.nationality});
     }
     catch(err){
       console.log(err)
@@ -48,18 +50,19 @@ useEffect(() => {
   const fetchProfile = async () => {
     const profile = await handleProfile();
     setProfileData(profile);
+    setPhoneNumber(profile.phoneNumber);
+    setCity(profile.city);
   };
   fetchProfile();
 }, []);
 
-  const [phoneNumber, setPhoneNumber] = useState(profileData.phoneNumber);
-  const [city, setCity] = useState(profileData.city);
+
   const [isChangesSaved, setIsChangesSaved] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
 
 
-  const [oldCity, setOldCity] = useState(profileData.city); // Ref for the old city, for validation
+  const [oldCity, setOldCity] = useState(null); // Ref for the old city, for validation
 
   function onBackPressed(){
     navigation.goBack()
@@ -87,22 +90,51 @@ useEffect(() => {
       },
       {
         text: 'Logout',
-        onPress: () => {
-          AsyncStorage.removeItem('AccessToken');
-          navigation.navigate('LoginScreen');
+        onPress: async () => {
+          try{
+            const token = await AsyncStorage.getItem('AccessToken');
+            const res = await axios.post('/logout',{},
+            {
+              headers: {'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`}
+            }
+            );
+            console.log(res)
+        }
+          catch(err){
+            console.log(err)
+          }
+          await AsyncStorage.removeItem('AccessToken');
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'LoginScreen' }],
+          });
           // Perform API call to logout
         },
       },
     ]);
   }
 
-  const handleSubmitChanges = () => {
+  const handleSubmitChanges = async() => {
     // Perform API call to submit changes to the backend
     // Assuming a successful API call, set isChangesSaved to true
-
-
-
     if(!isChangesSaved){
+
+      try{
+        const token = await AsyncStorage.getItem('AccessToken');
+        const res = await axios.put('/client/home/profile/edit',
+        {phone_number: phoneNumber, city: city},
+        {
+          headers: {'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`}
+        }
+        )
+        await AsyncStorage.setItem("AccessToken", res.data.token);
+      }
+      catch(err){
+        console.log(err)
+      }
+
       setIsChangesSaved(true);
       Alert.alert('Changes Saved', 'Your changes have been saved successfully.');
       navigation.goBack();

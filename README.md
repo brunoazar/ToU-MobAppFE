@@ -9,6 +9,16 @@ The need for cross-border trade has been on the rise, especially with the ease o
 - [@eliehanna2](https://www.github.com/eliehanna2)
 
 
+
+## Design
+
+[Mobile App Design](https://pdfhost.io/v/kY0xV4Mea_ToUMobileDesign)
+
+
+## Demo / Tutorial
+
+
+[Usage Tutorial](https://pdfhost.io/v/2gCHtfyGS_Usage)
 ## Color Reference
 
 | Color             | Hex                                                                |
@@ -17,17 +27,9 @@ The need for cross-border trade has been on the rise, especially with the ease o
 
 
 
-## Demo
-
-Insert gif or link to demo
-
-
-## Screenshots
-
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
-
-
 ## Tech Stack
+
+*For Mobile App:*
 
 **Client:** React Native
 
@@ -79,7 +81,7 @@ Start the expo server
 
 ## Documentation
 
-[Documentation](https://linktodocumentation)
+[Documentation](https://pdfhost.io/v/klR.T6ofs_ToU_Documentation)
 
 
 ## Lessons Learned

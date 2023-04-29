@@ -77,14 +77,10 @@ const PasteLinkScreen = ({ navigation }) => {
       console.log(err);
     }
   }
-  const getExchangeRate = async () => {
-    const exchangeRate =await handledollarrate();
-    return exchangeRate;
-  }
   
   useEffect(() => {
     const fetchExchangeRate = async () => {
-      const rate = await getExchangeRate();
+      const rate = await handledollarrate();
       setExchangeRate(rate);
     };
     fetchExchangeRate();

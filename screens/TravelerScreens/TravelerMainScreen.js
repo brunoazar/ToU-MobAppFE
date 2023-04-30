@@ -168,6 +168,7 @@ const TravelerMainScreen = ({navigation}) => {
               }
             }
           );
+          await AsyncStorage.setItem("AccessToken", res.data.token);
         }
         catch(err){
             console.log(err);

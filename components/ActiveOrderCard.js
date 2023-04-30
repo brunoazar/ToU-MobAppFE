@@ -9,7 +9,7 @@ const ActiveOrderCard = ({ navigation, product}) => {
   const [status, setStatus] = useState(product.status);
 
   const handleCompleteClicked = () => {
-    if(status === "6") {
+    if(status == "6") {
       handleOrderComplete();
       return;
     }
@@ -57,7 +57,7 @@ const ActiveOrderCard = ({ navigation, product}) => {
     const stages = ['Acquired', 'Shipped', 'Arrived', 'Sent out', 'Completed'];
     const isActive = stage <= product.status;
     const stageColor = isActive ? '#3274cb' : 'grey';
-    const stageText = stage === product.status ? 'Current Stage' : '';
+    const stageText = stage == product.status ? 'Current Stage' : '';
     
     return (
       <View style={styles.timelineStageContainer}>

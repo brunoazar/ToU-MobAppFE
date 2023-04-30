@@ -3,6 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { Platform, StatusBar} from 'react-native';
 import StarRating from 'react-native-star-rating-widget';
 import { useRoute } from '@react-navigation/native';
+import axios from '../../api/axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const FeedbackScreen = ({ navigation }) => {
@@ -35,20 +37,23 @@ const FeedbackScreen = ({ navigation }) => {
     
     try{
       console.log("We are here 8");
+      const token = await AsyncStorage.getItem('AccessToken');
       const res = await axios.post('client/home/activeorder/' + orderID + '/markascomplete/feedback',//post request
       JSON.stringify({rating, arrived_on_time: orderArrived, as_described: itemAsDescribed, good_service: serviceCourteous, message: comments}),
       {
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`}
       }
       );
+      await AsyncStorage.setItem("AccessToken", res.data.token);
       console.log(res.data);//for you to check what the server is responding with
-
+      navigation.navigate('PasteLinkScreen');
     }catch(err){
 
       console.log(err);
     }
 
-    navigation.navigate('PasteLinkScreen');
+    
   };
 
   

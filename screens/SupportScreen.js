@@ -38,6 +38,8 @@ const SupportScreen = ({navigation}) => {
         }
       );
       await AsyncStorage.setItem("AccessToken", res.data.token);
+      console.log("very nice")
+      navigation.navigate('PasteLinkScreen')
     }
     catch (err) {
       console.log(err);

@@ -109,9 +109,25 @@ const ActiveOrderCard = ({ product }) => {
         style: 'cancel',
         color: 'red',
       },
-      {text: 'YES', onPress: () => console.log('YES Pressed')
+      {text: 'YES', onPress: async () => {
+        console.log('YES Pressed');
+        try{
+          const token = await AsyncStorage.getItem('AccessToken');
+          const res = await axios.post('/traveler/home/activeorders/'+product.id+'/markarrived', {},
+          {
+            headers:{
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          await AsyncStorage.setItem('AccessToken', res.data.token);
+        }
+        catch(err){
+          console.log(err);
+        }
       // Backend call to mark order as arrived to Lebanon
       // Update the order status in the database through the API
+      }
     },
     
   ]);
@@ -127,9 +143,25 @@ const ActiveOrderCard = ({ product }) => {
         style: 'cancel',
         color: 'red',
       },
-      {text: 'YES', onPress: () => console.log('YES Pressed')
+      {text: 'YES', onPress: async () => {
+      console.log('YES Pressed')
       // Backend call to mark order as shipped
       // Update the order status in the database through the API
+        const token  = await AsyncStorage.getItem('AccessToken');
+        try{
+          const res = await axios.post('/traveler/home/activeorders/'+product.id+'/markassent',{},
+          {
+            headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+            }
+          })
+          await AsyncStorage.setItem('AccessToken', res.data.token);
+        }
+        catch(err){
+          console.log(err);
+        }
+      }
     },
     
   ]);
@@ -181,8 +213,31 @@ const ActiveOrderCard = ({ product }) => {
       
       }
 
-  const submitProofOfReceipt = () => {
+  const submitProofOfReceipt = async () => {
     // helper function to upload the proof of receipt to the server
+    try{
+      const token = await AsyncStorage.getItem('AccessToken');
+      console.log(product.id)
+      const formData = new FormData();
+      formData.append('file', {
+        uri: proofOfReceiptUri,
+        name: proofOfReceiptName,
+        type: proofOfReceiptType,
+        data: proofOfReceiptData
+      });
+      const res = await axios.post('/traveler/home/activeorders/'+product.id+'/uploadproof', formData,
+      {
+        headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${token}`
+        }
+      });
+      await AsyncStorage.setItem('AccessToken', res.data.token);
+      console.log(res.data)
+      }
+    catch(err){
+      console.log(err);
+    }
   }
 
   const renderTimelineStage = (stage) => {

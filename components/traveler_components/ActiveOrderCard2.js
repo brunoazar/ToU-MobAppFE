@@ -10,30 +10,33 @@ const ActiveOrderCard = ({ product }) => {
   const [status, setStatus] = useState(product.status);
   const [proofOfReceiptUri, setProofOfReceiptUri] = useState("");
   const [proofOfReceiptName, setProofOfReceiptName] = useState("");
+  const [proofOfReceiptType, setProofOfReceiptType] = useState("");
+  const [proofOfReceiptData, setProofOfReceiptData] = useState("");
 
   const handleProofOfReceiptClicked = () => {
-    if(status === "2" ) {
+    console.log(status)
+    if(status == "2" ) {
       // This means the order has not been acquired yet
       _pickProofOfReceipt();
       return;
     }
-    else if(status === "3") {
+    else if(status == "3") {
       // This means the order has been acquired
       Alert.alert('Order Already Acquired', 'You can only upload a proof of receipt once the order has been accepted.');
     }
-    else if(status === "4") {
+    else if(status == "4") {
       // This means the order has been shipped
       Alert.alert('Order Already Shipped', 'You can only upload a proof of receipt once the order has been accepted.');
     }
-    else if(status === "5") {
+    else if(status == "5") {
       // This means the order has arrived to Lebanon
       Alert.alert('Order Already Arrived', 'You can only upload a proof of receipt once the order has been accepted.');
     }
-    else if(status === "6") {
+    else if(status == "6") {
       // This means the order has been sent out
       Alert.alert('Order Already Sent Out', 'You can only upload a proof of receipt once the order has been accepted.');
     }
-    else if(status === "7") {
+    else if(status == "7") {
       // This means the order has been completed
       Alert.alert('Order Already Completed', 'You can only upload a proof of receipt once the order has been accepted.');
     }
@@ -43,52 +46,52 @@ const ActiveOrderCard = ({ product }) => {
   };
   const handleShippedClicked = () => {
     // if the status is 1, then the order has been acquired
-    if(status === "3") {
+    if(status == "3") {
       handleOrderShipped();
       return;
     }
     // if the status is 0, then the order has not been acquired yet
-    else if(status === "2") {
+    else if(status == "2") {
       Alert.alert('Order Not Acquired', 'You can only mark an order as shipped once it has been acquired.');
     }
     // if the status is 2, then the order has been shipped
-    else if(status === "4") {
+    else if(status == "4") {
       Alert.alert('Order Already Shipped', 'You can only mark an order as shipped once.');
     }
     // if the status is 3, then the order has arrived to Lebanon
-    else if(status === "5") {
+    else if(status == "5") {
       Alert.alert('Order Already Arrived', 'You can only mark an order as shipped once.');
     }
     // if the status is 4, then the order has been sent out
-    else if(status === "6") {
+    else if(status == "6") {
       Alert.alert('Order Already Sent Out', 'You can only mark an order as shipped once.');
     }
     // if the status is 5, then the order has been completed
-    else if(status === "7") {
+    else if(status == "7") {
       Alert.alert('Order Already Completed', 'You can only mark an order as shipped once.');
     }
   };
 
   const handleArrivedClicked = () => {
-    if(status === "4") {
+    if(status == "4") {
       handleOrderArrived();
       return;
     }
-    else if(status === "2") {
+    else if(status == "2") {
       Alert.alert('Order Not Acquired', 'You can only mark an order as arrived once it has been acquired.');
     }
-    else if(status === "3") {
+    else if(status == "3") {
       Alert.alert('Order Not Shipped', 'You can only mark an order as arrived once it has been shipped.');
     }
-    else if(status === "5") {
+    else if(status == "5") {
       // This means the order has already arrived to Lebanon
       Alert.alert('Order Already Arrived', 'You can only mark an order as arrived once.');
     }
-    else if(status === "6") {
+    else if(status == "6") {
       // This means the order has already been sent out
       Alert.alert('Order Already Sent Out', 'You can only mark an order as arrived once.');
     }
-    else if(status === "7") {
+    else if(status == "7") {
       // This means the order has already been completed
       Alert.alert('Order Already Completed', 'You can only mark an order as arrived once.');
     }
@@ -129,20 +132,29 @@ const ActiveOrderCard = ({ product }) => {
       
     ]);
 
-    _pickProofOfReceipt = async () => {
+    const _pickProofOfReceipt = async () => {
       // used to pick a proof of receipt from the user's phone
         try{
           let result = await DocumentPicker.getDocumentAsync({ 
-          copyToCacheDirectory: true,
+          copyToCacheDirectory: false,
+          type: "*/*"
         });
-          if(result.cancelled){
-            result.cancelled = false;
-          }
-          if (!result.cancelled) {
-            setProofOfReceiptUri(result.uri);
-            setProofOfReceiptName(result.name);
-          }
+        const fileUri = result.uri;
+        const fileName = result.name;
+        const mimeType = result.mimeType
           
+        const tempFileUri = FileSystem.cacheDirectory + fileName;
+        await FileSystem.copyAsync({
+          from: fileUri,
+          to: tempFileUri,
+        });
+
+        const fileData = await FileSystem.readAsStringAsync(tempFileUri, {encoding:FileSystem.EncodingType.Base64});
+
+        setProofOfReceiptName(fileName);
+        setProofOfReceiptData(fileData);
+        setProofOfReceiptType(mimeType);
+        setProofOfReceiptUri(tempFileUri);
         }
         catch(e){
           console.log(e);
@@ -155,7 +167,7 @@ const ActiveOrderCard = ({ product }) => {
     const stages = ['Acquired', 'Shipped', 'Arrived', 'Sent out', 'Completed'];
     const isActive = stage <= parseInt(product.status);
     const stageColor = isActive ? '#3274cb' : 'grey';
-    const stageText = stage === product.status ? 'Current Stage' : '';
+    const stageText = stage == product.status ? 'Current Stage' : '';
     
     return (
       <View style={styles.timelineStageContainer}>

@@ -100,37 +100,41 @@ const ActiveOrderCard = ({ product }) => {
     }
   };
 
-  const handleOrderArrived = () =>
-  // helper function to update the status of the order
-      Alert.alert('Order Arrived', 'Are you sure you want to mark the order as arrived to Lebanon?', [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-          color: 'red',
-        },
-        {text: 'YES', onPress: () => console.log('YES Pressed')
-        // Backend call to mark order as arrived to Lebanon
-        // Update the order status in the database through the API
+  const handleOrderArrived = () =>{
+    // helper function to update the status of the order
+    Alert.alert('Order Arrived', 'Are you sure you want to mark the order as arrived to Lebanon?', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+        color: 'red',
       },
-      
-    ]);
+      {text: 'YES', onPress: () => console.log('YES Pressed')
+      // Backend call to mark order as arrived to Lebanon
+      // Update the order status in the database through the API
+    },
+    
+  ]);
+  }
+  
 
-  const handleOrderShipped = () =>
-  // helper function to update the status of the order
-      Alert.alert('Order Shipped', 'Are you sure you want to mark the order as shipped?', [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-          color: 'red',
-        },
-        {text: 'YES', onPress: () => console.log('YES Pressed')
-        // Backend call to mark order as shipped
-        // Update the order status in the database through the API
+  const handleOrderShipped = () => {
+    // helper function to update the status of the order
+    Alert.alert('Order Shipped', 'Are you sure you want to mark the order as shipped?', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+        color: 'red',
       },
-      
-    ]);
+      {text: 'YES', onPress: () => console.log('YES Pressed')
+      // Backend call to mark order as shipped
+      // Update the order status in the database through the API
+    },
+    
+  ]);
+  }
+  
 
     const _pickProofOfReceipt = async () => {
       // used to pick a proof of receipt from the user's phone
@@ -155,6 +159,20 @@ const ActiveOrderCard = ({ product }) => {
         setProofOfReceiptData(fileData);
         setProofOfReceiptType(mimeType);
         setProofOfReceiptUri(tempFileUri);
+        
+        // helper function to upload the proof of receipt to the server
+        Alert.alert('Proof of Receipt is selected', 'Do you want to submit it?', [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+            color: 'red',
+          },
+          {text: 'YES', onPress: submitProofOfReceipt
+          // Backend call to upload the proof of receipt
+        },
+        
+      ]);
         }
         catch(e){
           console.log(e);
@@ -162,6 +180,10 @@ const ActiveOrderCard = ({ product }) => {
         }
       
       }
+
+  const submitProofOfReceipt = () => {
+    // helper function to upload the proof of receipt to the server
+  }
 
   const renderTimelineStage = (stage) => {
     const stages = ['Acquired', 'Shipped', 'Arrived', 'Sent out', 'Completed'];

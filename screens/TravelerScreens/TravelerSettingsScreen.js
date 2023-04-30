@@ -34,7 +34,7 @@ const SettingsScreen = ({ navigation }) => {
     console.log(res.data)
     return ({firstName: res.data.trav.name,
                     lastName: res.data.trav.lastname,
-                    phoneNumber: res.data.trav.phone,
+                    phoneNumber: res.data.trav.phone_number,
                     gender: res.data.trav.gender,
                     nationality: res.data.trav.nationality});
 
@@ -50,7 +50,7 @@ useEffect(() =>{
     setProfileData(profile);
     console.log(profile)
     //log phone number 
-    setPhoneNumber(profile.phoneNumber);
+    setPhoneNumber(profile.phoneNumber.toString());
   };
   fetchProfile();
 },[]);
@@ -106,7 +106,7 @@ useEffect(() =>{
       try{
         const token = await AsyncStorage.getItem('AccessToken');
         const res = await axios.post('/profile/edit',
-        {phone: phoneNumber},
+        {phone_number: phoneNumber},
         {
           headers: {'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`}

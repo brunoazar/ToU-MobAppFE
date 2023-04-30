@@ -54,6 +54,40 @@ const TravelerMainScreen = ({navigation}) => {
         return;
       }
       // BACKEND CODE TO UPLOAD TICKET AND PICKUP LOCATION TO DATABASE
+      try{
+        const token = await AsyncStorage.getItem('AccessToken');
+        console.log("We are here 6");
+        const formData = new FormData();
+        formData.append('file', {
+          uri: ticketUri,
+          type: ticketType,
+          name: ticketName,
+          data: ticketData
+        });
+        const res = await axios.post('/traveler/home/uploadTicket', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        const res1 = await axios.post('/providePickup',
+          JSON.stringify({pickupLocation}),
+          {headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        }});
+        console.log(res.data);//for you to check what the server is responding with
+        
+        //send user to corresponding page
+  
+        //add what happens when uploaded successfully
+        setClickedUpload(true);
+        setHasTicket(true);
+  
+      }catch(err){
+  
+        console.log(err);
+      }
     };
 
 
@@ -71,43 +105,6 @@ const TravelerMainScreen = ({navigation}) => {
         return;
       }
         _pickTicket();
-        // BACKEND CODE TO UPLOAD TICKET TO DATABASE
-        try{
-            const token = await AsyncStorage.getItem('AccessToken');
-            console.log("We are here 6");
-            const formData = new FormData();
-            formData.append('file', {
-              uri: ticketUri,
-              type: ticketType,
-              name: ticketName,
-              data: ticketData
-            });
-            const res = await axios.post('/traveler/home/uploadTicket', formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': `Bearer ${token}`,
-              },
-            });
-            const res1 = await axios.post('/providePickup',
-              JSON.stringify({pickupLocation}),
-              {headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }});
-            console.log(res.data);//for you to check what the server is responding with
-            
-            //send user to corresponding page
-      
-            //add what happens when uploaded successfully
-            setClickedUpload(true);
-            setHasTicket(true);
-      
-          }catch(err){
-      
-            console.log(err);
-          }
-        //will add 10 second wait later
-
     };
 
     const _pickTicket= async () => {
@@ -162,7 +159,6 @@ const TravelerMainScreen = ({navigation}) => {
     const flightDate = "2021-05-01";
 
     const handleTravelerView = () => {
-      handleHasTicket();
       if (hasTicket == false){
         return (<View style={styles.body}>
           <Text style={styles.bodyText}>Upload Your Flight Ticket Here:</Text>

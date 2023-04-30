@@ -210,15 +210,15 @@ const TravelerMainScreen = ({navigation}) => {
       else{
         return (<View style={styles.body}>
           <Text style={styles.bodyText}>Name on Ticket:</Text>
-          <Text style={styles.bodyText}>{nameonTicket}</Text>
+          <Text style={styles.ansText}>{nameonTicket}</Text>
           <Text style={styles.bodyText}>Your Flight Date:</Text>
-          <Text style={styles.bodyText}>{flightDate}</Text>
+          <Text style={styles.ansText}>{flightDate}</Text>
           <Text style={styles.bodyText}>Your Return Date:</Text>
-          <Text style={styles.bodyText}>{returnDate}</Text>
+          <Text style={styles.ansText}>{returnDate}</Text>
           <Text style={styles.bodyText}>Your Departure Flight:</Text>
-          <Text style={styles.bodyText}>{departure_flight}</Text>
+          <Text style={styles.ansText}>{departure_flight}</Text>
           <Text style={styles.bodyText}>Your Arrival Flight:</Text>
-          <Text style={styles.bodyText}>{arrival_flight}</Text>
+          <Text style={styles.ansText}>{arrival_flight}</Text>
           <TouchableOpacity style={styles.buttonContainer} onPress={handleCancelTicket}>
               <Text style={styles.buttonText}>Cancel Ticket</Text>
           </TouchableOpacity>
@@ -267,6 +267,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#3274cb',
     },
+    ansText: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: '#000',
+  },
     buttonContainer: {
         height: 45,
         justifyContent: 'center',

@@ -39,7 +39,7 @@ const ActiveOrdersScreen2 = ({navigation}) => {
           console.log(res.data[0])
           const pr = res.data[0].aorders
           for(let i=0;i<res.data[0].aorders.length;i++){
-            list.push({id: pr[i].order._id, title: pr[i].product.title, price: pr[i].product.price, image: pr[i].product.image, url: pr[i].product.url, inStock: pr[i].product.inStock, status: pr[i].order.status, commission: pr[i].order.t_commission, quantity: pr[i].order.quantity})
+            list.push({id: pr[i].order._id, title: pr[i].product.title, price: pr[i].product.price, image: pr[i].product.image, url: pr[i].product.url, inStock: pr[i].product.inStock, status: pr[i].order.status, commission: pr[i].order.t_commission.toFixed(2), quantity: pr[i].order.quantity})
           }
           console.log(list)
           return list;

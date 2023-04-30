@@ -212,7 +212,7 @@ const ActiveOrderCard = ({ product }) => {
         <Text style={styles.price}>{product.price}</Text>
         <Text style={styles.stockStatus}>{product.inStock ? 'In Stock' : 'Out of Stock'}</Text>
         <Text style={styles.price}>Qty: {product.quantity}</Text>
-        <Text style={styles.price}>Commission: {product.commission}</Text>
+        <Text style={styles.price}>Commission: ${product.commission}</Text>
         
         <View style={styles.timelineContainer}>
           {renderTimelineStage(3) // 3 is the acquired stage

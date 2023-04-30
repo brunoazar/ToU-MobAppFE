@@ -56,7 +56,7 @@ const PendingOrdersScreen2 = ({ navigation }) => {
 
 
   // Render each product as a PendingOrderCard component
-  const renderProduct = ({ item }) => {products && <PendingOrderCard2 product={item} />};
+  const renderProduct = ({ item }) => <PendingOrderCard2 product={item} />;
 
   return (
     <View style={styles.container}>

@@ -1,6 +1,9 @@
 import React, {useState} from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Alert} from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from '../../api/axios';
 
 const ActiveOrderCard = ({ product }) => {
   const [url, setUrl] = useState(product.url);

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from '../api/axios';
 
 const SupportScreen = ({navigation}) => {
   const [problemType, setProblemType] = useState(null);
@@ -15,7 +17,7 @@ const SupportScreen = ({navigation}) => {
     setInquiry(text);
   };
 
-  const handleSendInquiry = () => {
+  const handleSendInquiry = async() => {
     if (!problemType) {
       Alert.alert('Please select a problem type');
       return;
@@ -25,6 +27,21 @@ const SupportScreen = ({navigation}) => {
       return;
     }
     // send inquiry logic here
+    try {
+      const token = await AsyncStorage.getItem('AccessToken');
+      const res = await axios.post('/support',
+        JSON.stringify({message: inquiry, subject: problemType}),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`}
+        }
+      );
+      await AsyncStorage.setItem("AccessToken", res.data.token);
+    }
+    catch (err) {
+      console.log(err);
+    }
   };
 
   const renderProblemFix = () => {

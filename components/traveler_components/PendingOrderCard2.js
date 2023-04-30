@@ -1,10 +1,29 @@
 import React, {useState} from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from '../../api/axios';
 
 
 const PendingProductCard = ({ product }) => {
   const [url, setUrl] = useState(product.url);
+
+  const handleRejectOrder = async () => {
+    try{
+      const token = await AsyncStorage.getItem('AccessToken');
+      const res = await axios.post('/traveler/home/neworders/'+ product.id +'/reject', {},
+      {
+        headers: { 'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                  }
+      }
+      );
+      await AsyncStorage.setItem("AccessToken", res.data.token);
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
 
   const handleRejectClicked = () =>
     Alert.alert('Reject Product', 'Are you sure you want to reject this product?', [
@@ -14,12 +33,33 @@ const PendingProductCard = ({ product }) => {
         style: 'cancel',
         color: 'red',
       },
-      {text: 'YES', onPress: () => console.log('YES Pressed')
-      // Backend call to reject product
-      // Update the product status in the database through the API
+      {text: 'YES', onPress: () => {
+        console.log('YES Pressed');
+        handleRejectOrder();
+      }
     },
 
   ]);
+
+  const handleAcceptOrder = async () => {
+
+    try{
+      const token = await AsyncStorage.getItem('AccessToken');
+      const res = await axios.post('/traveler/home/neworders/'+ product.id +'/accept', {},
+      {
+        headers: { 'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+                }
+      }
+      );
+      await AsyncStorage.setItem("AccessToken", res.data.token);
+    }
+    catch(err){
+      console.log(err);
+    }
+
+    
+  }
 
   const handleAcceptClicked = () =>
     Alert.alert('Accept Product', 'Are you sure you want to accept this product?', [
@@ -29,9 +69,10 @@ const PendingProductCard = ({ product }) => {
         style: 'cancel',
         color: 'red',
       },
-      {text: 'YES', onPress: () => console.log('YES Pressed')
-      // Backend call to accept product
-      // Update the product status in the database through the API
+      {text: 'YES', onPress: async () => {
+        console.log('YES Pressed');
+        handleAcceptOrder();
+      }
     },
 
   ]);

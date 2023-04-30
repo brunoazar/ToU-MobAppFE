@@ -36,6 +36,7 @@ const ProductPage = ({ navigation }) => {
             if(res.status == 200){
               Alert.alert('Product Requested','Your request is now pending, keep an eye on your email (junk/spam folders) for updates');
             }
+            navigation.navigate('PasteLinkScreen');
         }
         catch(err){
             console.log(err);

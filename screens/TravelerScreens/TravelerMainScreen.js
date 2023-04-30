@@ -158,7 +158,15 @@ const TravelerMainScreen = ({navigation}) => {
     // will be replaced with a api call to get the flight date
     const flightDate = "2021-05-01";
 
+    // this makes sure that handleHasTicket is only called once
+    const [rendered, setRendered] = useState(false);
+
     const handleTravelerView = () => {
+      if (rendered == false){
+        setRendered(true);
+        handleHasTicket();
+      }
+
       if (hasTicket == false){
         return (<View style={styles.body}>
           <Text style={styles.bodyText}>Upload Your Flight Ticket Here:</Text>

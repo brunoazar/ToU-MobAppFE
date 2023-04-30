@@ -40,9 +40,30 @@ const TravelerMainScreen = ({navigation}) => {
     }
     };
 
-    const handleTicketUploadClicked = async() => {
+
+
+
+
+    const handleSubmit = async() => {
+      if (pickupLocation == ""){
+        Alert.alert('Pickup Location not set', 'Please set your pickup location before submitting.');
+        return;
+      }
       if (clickedUpload == true){
         Alert.alert('Ticket already uploaded', 'You have already uploaded a ticket, please wait.');
+        return;
+      }
+      // BACKEND CODE TO UPLOAD TICKET AND PICKUP LOCATION TO DATABASE
+    };
+
+
+
+
+
+
+    const handleTicketUploadClicked = async() => {
+      if (clickedUpload == true){
+        Alert.alert('Ticket already selected', 'You have already selected a ticket, please submit to upload.');
         return;
       }
       if (pickupLocation == ""){
@@ -155,7 +176,10 @@ const TravelerMainScreen = ({navigation}) => {
             maxLength={200}
           />
           <TouchableOpacity style={styles.buttonContainer} onPress={handleTicketUploadClicked}>
-              <Text style={styles.buttonText}>Upload Ticket</Text>
+              <Text style={styles.buttonText}>Select Ticket</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonContainer} onPress={handleSubmit}>
+              <Text style={styles.buttonText}>Submit Ticket and Location</Text>
           </TouchableOpacity>
       </View>
       );

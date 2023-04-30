@@ -49,6 +49,7 @@ useEffect(() =>{
     const profile = await handleProfile();
     setProfileData(profile);
     console.log(profile)
+    //log phone number 
     setPhoneNumber(profile.phoneNumber);
   };
   fetchProfile();

@@ -17,6 +17,7 @@ const PendingProductCard = ({ product }) => {
         <Text style={product.inStock ? styles.inStock : styles.outOfStock}>
           {product.inStock == true ? 'In Stock' : 'Out of Stock'}
         </Text>
+        <Text style={styles.price}>Qty: {product.quantity}</Text>
         <TouchableOpacity onPress={() => Clipboard.setStringAsync(url)} style={styles.buttonContainer}>
           <Text style={styles.buttonText}>Copy Link</Text>
         </TouchableOpacity>

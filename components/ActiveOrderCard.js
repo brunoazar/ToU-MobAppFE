@@ -81,11 +81,9 @@ const ActiveOrderCard = ({ navigation, product}) => {
       <Image source={{ uri: product.image }} style={styles.image} />
       <View style={styles.detailsContainer}>
         <Text style={styles.title}>{product.title}</Text>
-        <Text style={styles.price}>{product.price}</Text>
+        <Text style={styles.price}>{product.cost}</Text>
         <Text style={styles.stockStatus}>{product.inStock ? 'In Stock' : 'Out of Stock'}</Text>
-        {
-        //renderTimelineStages2(product.status)
-          }
+        <Text style={styles.price}>Qty: {product.quantity}</Text>
         <View style={styles.timelineContainer}>
           {renderTimelineStage(3)}
           {renderTimelineStage(4)}

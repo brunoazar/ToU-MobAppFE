@@ -30,6 +30,7 @@ const ProductPage = ({ navigation }) => {
               }
             }
             );
+            await AsyncStorage.setItem("AccessToken", res.data.accessToken);
             console.log(res.data);//for you to check what the server is responding with
       
             if(res.status == 200){

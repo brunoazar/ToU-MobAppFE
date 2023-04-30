@@ -20,22 +20,22 @@ const ActiveOrderCard = ({ navigation, product}) => {
 
   const afterCompletion = async () => {
     // Backend call to mark order as complete
-    // try{
-    //   const token = await AsyncStorage.getItem('token');
-    //   const response = await axios.post('/client/home/activeorder/', {
-    //     orderID: product.id
-    //   }, {
-    //     headers: {
-    //       Authorization: 'Bearer ' + token
-    //     }
-    //   });
-    //   console.log(response);
-    // }
-    // catch(err){
-    //   console.log(err);
-    // }
-    // // Update the order status in the database through the API
-    // navigation.navigate('FeedbackScreen', { orderID: product.id});
+    try{
+      const token = await AsyncStorage.getItem('AccessToken');
+      const orderID = product.id
+      const res = await axios.post('/client/home/activeorder/'+orderID+"/markascomplete", {}, 
+      {
+        headers: { 'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`},
+      });
+      await AsyncStorage.setItem("AccessToken", res.data.token);
+      navigation.navigate('FeedbackScreen', { orderID: product.id});
+    }
+    catch(err){
+      console.log(err);
+    }
+    // Update the order status in the database through the API
+
   };
 
   const handleOrderComplete = () =>

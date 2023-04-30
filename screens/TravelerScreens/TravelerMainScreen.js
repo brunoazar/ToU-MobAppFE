@@ -5,6 +5,8 @@ import BottomNav2 from '../../components/traveler_components/BottomNav2'; // Imp
 import { useRoute } from '@react-navigation/native';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from '../../api/axios';
 
 const TravelerMainScreen = ({navigation}) => {
     const route = useRoute();
@@ -19,6 +21,24 @@ const TravelerMainScreen = ({navigation}) => {
     const [hasTicket, setHasTicket] = useState(false);
 
     // api call to check if user has a ticket
+    const handleHasTicket = async() => {
+      try{
+        const token = await AsyncStorage.getItem('AccessToken');
+        const res = await axios.get('/hasTicket',
+        {
+          headers : {'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`
+                    }
+        }
+      );
+      await AsyncStorage.setItem("AccessToken", res.data.token);
+      console.log(res.data)
+      setHasTicket(res.data.hasTicket);
+    }
+    catch(err){
+      console.log(err)
+    }
+    };
 
     const handleTicketUploadClicked = async() => {
       if (clickedUpload == true){
@@ -32,6 +52,7 @@ const TravelerMainScreen = ({navigation}) => {
         _pickTicket();
         // BACKEND CODE TO UPLOAD TICKET TO DATABASE
         try{
+            const token = await AsyncStorage.getItem('AccessToken');
             console.log("We are here 6");
             const formData = new FormData();
             formData.append('file', {
@@ -43,9 +64,15 @@ const TravelerMainScreen = ({navigation}) => {
             const res = await axios.post('/traveler/home/uploadTicket', formData, {
               headers: {
                 'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`,
               },
             });
-      
+            const res1 = await axios.post('/providePickup',
+              JSON.stringify({pickupLocation}),
+              {headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }});
             console.log(res.data);//for you to check what the server is responding with
             
             //send user to corresponding page
@@ -92,8 +119,21 @@ const TravelerMainScreen = ({navigation}) => {
           }
         };
 
-    const handleCancelTicket = () => {
+    const handleCancelTicket = async () => {
         // BACKEND CODE TO CANCEL TICKET IN DATABASE
+        try{
+          const token = await AsyncStorage.getItem('AccessToken');
+          const res = await axios.post('/cancelflight',{},
+            { headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+              }
+            }
+          );
+        }
+        catch(err){
+            console.log(err);
+        }
     };
 
     // this is just a placeholder for now
@@ -101,6 +141,7 @@ const TravelerMainScreen = ({navigation}) => {
     const flightDate = "2021-05-01";
 
     const handleTravelerView = () => {
+      handleHasTicket();
       if (hasTicket == false){
         return (<View style={styles.body}>
           <Text style={styles.bodyText}>Upload Your Flight Ticket Here:</Text>

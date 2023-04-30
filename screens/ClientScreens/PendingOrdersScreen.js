@@ -28,7 +28,7 @@ const PendingOrdersScreen = ({ navigation }) => {
       const list = []
       const pr = res.data[0].porders
       for(let i=0;i<res.data[0].porders.length;i++){
-        list.push({id: pr[i].order._id, title: pr[i].product.title, price: pr[i].product.price, image: pr[i].product.image, url: pr[i].product.url, inStock: pr[i].product.inStock})
+        list.push({id: pr[i].order._id, title: pr[i].product.title, price: pr[i].product.price, image: pr[i].product.image, url: pr[i].product.url, inStock: pr[i].product.inStock, quantity: pr[i].order.quantity})
       }
       console.log(list)
 

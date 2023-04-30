@@ -36,9 +36,10 @@ const ActiveOrdersScreen2 = ({navigation}) => {
           );
           AsyncStorage.setItem("AccessToken", res.data[0].token)
           const list = []
+          console.log(res.data[0])
           const pr = res.data[0].aorders
           for(let i=0;i<res.data[0].aorders.length;i++){
-            list.push({id: pr[i].order._id, title: pr[i].product.title, price: pr[i].product.price, image: pr[i].product.image, url: pr[i].product.url, inStock: pr[i].product.inStock, status: pr[i].order.status})
+            list.push({id: pr[i].order._id, title: pr[i].product.title, price: pr[i].product.price, image: pr[i].product.image, url: pr[i].product.url, inStock: pr[i].product.inStock, status: pr[i].order.status, commission: pr[i].order.t_commission, quantity: pr[i].order.quantity})
           }
           console.log(list)
           return list;

@@ -40,7 +40,7 @@ const TravelerMainScreen = ({navigation}) => {
       if(res.data.hasTicket == true){
         setFlightDate(res.data.ticket.departure);
         setDeparture_flight(res.data.ticket.departure_flight);
-        setArrival_flight(res.data.return_flight);
+        setArrival_flight(res.data.ticket.return_flight);
         setReturnDate(res.data.ticket.return);
         setNameonTicket(res.data.ticket.ticket_name);
       }

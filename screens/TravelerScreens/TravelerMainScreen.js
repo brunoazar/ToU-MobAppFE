@@ -17,8 +17,12 @@ const TravelerMainScreen = ({navigation}) => {
     const [ticketData, setTicketData] = useState("");
     const [clickedUpload, setClickedUpload] = useState(false);
     const [pickupLocation, setPickupLocation] = useState("");
-
+    const [flightDate, setFlightDate] = useState("");
     const [hasTicket, setHasTicket] = useState(false);
+    const [departure_flight, setDeparture_flight] = useState("");
+    const [arrival_flight, setArrival_flight] = useState("");
+    const [returnDate, setReturnDate] = useState("");
+    const [nameonTicket, setNameonTicket] = useState("");
 
     // api call to check if user has a ticket
     const handleHasTicket = async() => {
@@ -33,6 +37,13 @@ const TravelerMainScreen = ({navigation}) => {
       );
       await AsyncStorage.setItem("AccessToken", res.data.token);
       console.log(res.data)
+      if(res.data.hasTicket == true){
+        setFlightDate(res.data.ticket.departure);
+        setDeparture_flight(res.data.ticket.departure_flight);
+        setArrival_flight(res.data.return_flight);
+        setReturnDate(res.data.ticket.return);
+        setNameonTicket(res.data.ticket.ticket_name);
+      }
       setHasTicket(res.data.hasTicket);
     }
     catch(err){
@@ -58,6 +69,11 @@ const TravelerMainScreen = ({navigation}) => {
         const token = await AsyncStorage.getItem('AccessToken');
         console.log("We are here 6");
         const formData = new FormData();
+        console.log(ticketData)
+        console.log(ticketUri)
+        console.log(ticketType)
+        console.log(ticketName)
+        console.log(pickupLocation)
         formData.append('file', {
           uri: ticketUri,
           type: ticketType,
@@ -70,19 +86,23 @@ const TravelerMainScreen = ({navigation}) => {
             'Authorization': `Bearer ${token}`,
           },
         });
+        await AsyncStorage.setItem("AccessToken", res.data.token);
+        const token1 = await AsyncStorage.getItem('AccessToken');
         const res1 = await axios.post('/providePickup',
           JSON.stringify({pickupLocation}),
           {headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${token1}`,
         }});
         console.log(res.data);//for you to check what the server is responding with
+        await AsyncStorage.setItem("AccessToken", res1.data.token);
         
         //send user to corresponding page
   
         //add what happens when uploaded successfully
         setClickedUpload(true);
         setHasTicket(true);
+        handleTravelerView();
   
       }catch(err){
   
@@ -156,7 +176,6 @@ const TravelerMainScreen = ({navigation}) => {
 
     // this is just a placeholder for now
     // will be replaced with a api call to get the flight date
-    const flightDate = "2021-05-01";
 
     // this makes sure that handleHasTicket is only called once
     const [rendered, setRendered] = useState(false);

@@ -1,6 +1,6 @@
 import axios from '../api/axios';
-import React, { useState, useRef } from 'react';
-import { Platform, StatusBar, Modal} from 'react-native';
+import React, { useState, useRef, useCallback } from 'react';
+import { Platform, StatusBar} from 'react-native';
 import {
   View,
   Text,
@@ -9,40 +9,58 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
+  Modal,
   Linking,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import lbCities from '../data/lbCities.json';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import countriesData from '../data/countriesData.json';
+import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
 
-
-const RegisterScreen = () => {
+const ApplyAsTravelerScreen = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [password, setPassword] = useState('');
   const [gender, setGender] = useState('');
   const [email, setEmail] = useState('');
-  const [city, setCity] = useState('');
   const [agreement, setAgreement] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
   const [isValidEmail, setIsValidEmail] = useState(true);
-  const [isValidPassword, setIsValidPassword] = useState(true);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const [cvUri, setCvUri] = useState('');
+  const [idUri, setIdUri] = useState('');
+  const [cvName, setCvName] = useState('');
+  const [idName, setIdName] = useState('');
+  const [cvType, setCvtype] = useState('');
+  const [idType, setIdtype] = useState('');
+  const [cvData, setCvdata] = useState('');
+  const [idData, setIddata] = useState('');
+
+  const [applyClicked, setApplyClicked] = useState(false);
   
-
-  const handleTogglePasswordVisibility = () => {
-    setIsPasswordVisible(!isPasswordVisible);
-  };
-
   const navigation = useNavigation();
 
   function onBackPressed(){
       navigation.goBack()
   }
   
+  // new code for waiting 10 seconds before submitting
+  const logRegister = () => {
+    // Logic to prevent multiple clicks on the button
+    if (applyClicked) {
+      Alert.alert('Please wait', 'Please wait while we process your application.');
+      return;
+    }
+    setApplyClicked(true);
+    console.log('clicked Apply');
+    Alert.alert('Uploading...', 'Please wait while we process your application.');
+    setTimeout(handleRegister, 10000);
+    
+  };
+
+
   const handleRegister = async () => {
     // Handle registration logic here
     if(!phoneAndEmailIsOk()){
@@ -54,35 +72,59 @@ const RegisterScreen = () => {
     };
     //If the code reached here, it means that the form is valid
     //Backend developer, your code goes here :)
+    //use const checkApplication to handle the response
+
     try{
-      console.log("We are here 2");
-      const res = await axios.post('/signup',//post request
-      JSON.stringify({email, password, name: firstName,lastname: lastName, nationality: "Lebanon", gender, city, phone_number: phoneNumber}),//include email and password
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
-      );
+      console.log("We are here 3");
+      const formData = new FormData();
+      formData.append('cv', {
+        uri: cvUri,
+        type: cvType,
+        name: cvName,
+        data: cvData
+      });
+      formData.append('id', {
+        uri: idUri,
+        type: idType,
+        name: idName,
+        data: idData
+      });
+      formData.append('otherData', JSON.stringify({
+        name: firstName,
+        lastname: lastName,
+        gender,
+        email,
+        phone_number: phoneNumber,
+        nationality: selectedCountry,
+      }));
+      const res = await axios.post('/travelersignup', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
       console.log(res.data);//for you to check what the server is responding with
 
       //send user to corresponding page
 
-      checkRegistration(res.status);
+      checkApplication(res.status);
 
     }catch(err){
 
       console.log(err);
     }
-    
   };
 
-  const checkRegistration = (responseCode) => {
-    // Handle registration logic here
-    if(responseCode == 201){
-      Alert.alert('Registration Successful', 'Keep an eye out on your email junk/spam folder.');
-      navigation.navigate("LoginScreen");
-      
-    }else{
-      Alert.alert('Registration Failed');
+  const checkApplication = (responseCode) => {
+    // Handle application logic here
+    if (responseCode === 200) {
+      // Application submitted successfully
+      Alert.alert('Application Submitted', 'Your application has been submitted successfully, keep an eye on your email junk/spam folder.');
+      navigation.navigate('LoginScreen');
+    } else {
+      // Application submission failed
+      Alert.alert('Application Failed', 'Your application has failed to submit, please try again.');
+      navigation.navigate('LoginScreen');
     }
   };
 
@@ -102,21 +144,27 @@ const RegisterScreen = () => {
       Alert.alert('Invalid Gender', 'Please enter your Gender.');
       return true;
     }
-    // Validate City
-    if (!city){
-      Alert.alert('Invalid City', 'Please enter your City.');
-      return true;
-    }
     // Validate Agreement
     if (!agreement){
       Alert.alert('Agreement Error', 'Please agree to the terms and conditions.');
       return true;
     }
-    // Validate password
-    if (!password || !isValidPassword) {
-      Alert.alert('Invalid Password', 'Please enter a password.');
+    // Validate nationality
+    if (!selectedCountry){
+      Alert.alert('Invalid Nationality', 'Please enter your nationality.');
       return true;
     }
+    // Validate CV
+    if (!cvUri || !cvName){
+      Alert.alert('Invalid CV', 'Please upload your CV.');
+      return true;
+    }
+    // Validate ID
+    if (!idUri || !idName){
+      Alert.alert('Invalid ID', 'Please upload your ID.');
+      return true;
+    }
+    
     return false;
   };
 
@@ -158,29 +206,93 @@ const RegisterScreen = () => {
   }
 
 
-  const validatePassword = () => {
-    // Define the regex pattern for password validation
-    
-
-    const regexPattern = /^(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).{8,}$/;
-    
-    // Test the password against the regex pattern
-    const isValid = regexPattern.test(password);
-    // Update the state
-    setIsValidPassword(isValid);
-  };
-  
   const scrollViewRef = useRef(); // Ref for ScrollView
 
-  const handleCityChange = (city) => {
-    setCity(city);
+  const handleCountryChange = (country) => {
+    setSelectedCountry(country);
     setModalVisible(false);
   };
 
+  
+  const _pickCv = async () => {
+    // used to pick cv from the device
+      try{
+        let result = await DocumentPicker.getDocumentAsync({ 
+        copyToCacheDirectory: false,
+        type: "*/*"
+      });
+      const fileUri = result.uri;
+      const fileName = result.name;
+      const mimeType = result.mimeType;
+
+      const tempFileUri = FileSystem.cacheDirectory + fileName;
+      await FileSystem.copyAsync({
+        from: fileUri,
+        to: tempFileUri
+      });
+
+      const fileData = await FileSystem.readAsStringAsync(tempFileUri, { encoding: FileSystem.EncodingType.Base64 });
+
+      setCvName(fileName);
+      setCvUri(tempFileUri);
+      setCvtype(mimeType);
+      setCvdata(fileData);
+      }
+      catch(e){
+        console.log(e);
+        return;
+      }
+    
+    }
+
+    const _pickId = async () => {
+      // used to pick id from the device
+      try{
+        let result = await DocumentPicker.getDocumentAsync({ 
+        copyToCacheDirectory: false,
+        type: "*/*"
+      });
+      const fileUri = result.uri;
+      const fileName = result.name;
+      const mimeType = result.mimeType;
+
+      const tempFileUri = FileSystem.cacheDirectory + fileName;
+      await FileSystem.copyAsync({
+        from: fileUri,
+        to: tempFileUri
+      });
+
+      const fileData = await FileSystem.readAsStringAsync(tempFileUri, { encoding: FileSystem.EncodingType.Base64 });
+
+      setIdName(fileName);
+      setIdUri(tempFileUri);
+      setIdtype(mimeType);
+      setIddata(fileData);
+      }
+      catch(e){
+        console.log(e);
+        return;
+      }
+
+    }
+     const handlePickCv = () => {
+      // logic to wait 5 seconds before picking cv
+      console.log('clicked CV');
+      Alert.alert('Uploading...', 'Please wait for a few seconds while we process your application.');
+      setTimeout(_pickCv, 5000);
+    };
+
+    const handlePickId = () => {
+      // logic to wait 5 seconds before picking id
+      console.log('clicked ID');
+      Alert.alert('Uploading...', 'Please wait for a few seconds while we process your application.');
+      setTimeout(_pickId, 5000);
+    };
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Register</Text>
+      <Text style={styles.title}>Apply as a Traveler</Text>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backContainer}>
                 <View style={styles.backButtonContainer}>
                 <Ionicons name="ios-close" size={28} color="#3274cb" />
@@ -221,47 +333,53 @@ const RegisterScreen = () => {
             <Text style={styles.genderButtonText}>F</Text>
           </TouchableOpacity>
         </View>
+        
+        <View style={styles.countryContainer}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => setModalVisible(true)}
+      >
+        <Text style={styles.buttonText}>
+          {selectedCountry ? selectedCountry : "Select Your Nationality"}
+        </Text>
+      </TouchableOpacity>
+
+      <Modal
+        visible={modalVisible}
+        animationType="slide"
+        transparent={true}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            {/* Pass the ref to ScrollView */}
+            <ScrollView ref={scrollViewRef}>
+              {countriesData.map((country) => (
+                <TouchableOpacity
+                  key={country.code}
+                  style={styles.countryItem}
+                  onPress={() => handleCountryChange(country.name)}
+                >
+                  <Text style={styles.countryText}>{country.name}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+    </View>
 
           <TextInput
+          maxLength={50}
             placeholder="Email"
             style={[styles.input, !isValidEmail && styles.inputError]}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
             onBlur={validateEmail} // onBlur event for email validation
-            maxLength={50}
           />
           {!isValidEmail && <Text style={styles.errorTextEmail}>    Please enter a valid email address</Text>}
         
-        
-
-            
-              <View style={styles2.passwordContainer}>
-                <TextInput
-                  style={[styles2.input, !isValidPassword && styles.inputError]}
-                  secureTextEntry={!isPasswordVisible}
-                  placeholder="Password"
-                  value={password}
-                  onChangeText={(text) => {setPassword(text); validatePassword}}
-                  onBlur={validatePassword}
-                  maxLength={100}
-                />
-                <TouchableOpacity
-                  style={styles2.eyeIconContainer}
-                  onPress={handleTogglePasswordVisibility}
-                >
-                  <Icon
-                    name={isPasswordVisible ? 'eye-slash' : 'eye'}
-                    size={20}
-                    color="black"
-                  />
-                </TouchableOpacity>
-              </View>
-          
-          {!isValidPassword && <Text style={styles.errorText}>{'\t\t'}Please enter a strong password (length: 8+, {'\n\t\t'}contains uppercase and lowercase letters, {'\n\t\t'}digits, and a special character)</Text>}
-
-         
-
         <View style={styles.container}>
               <TextInput
                 placeholder="Phone Number"
@@ -275,41 +393,18 @@ const RegisterScreen = () => {
               {!isValidPhoneNumber && <Text style={styles.errorText}>Please enter a valid phone number</Text>}
               
         </View>
-        <Text style={styles.countryText}>Lebanon</Text>
-          
-          
-        <View style={styles.cityContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => setModalVisible(true)}
-          >
-            <Text style={styles.buttonText}>
-              {city ? city : "Select Your City"}
-            </Text>
+        
+        
+        <View style={styles.uploadContainer}>
+          <TouchableOpacity style={styles.uploadButton} onPress={handlePickCv}>
+            <Text style={styles.uploadButtonText}>Upload CV as pdf</Text>
           </TouchableOpacity>
-
-          <Modal
-            visible={modalVisible}
-            animationType="slide"
-            transparent={true}
-          >
-            <View style={styles.modalContainer}>
-              <View style={styles.modalContent}>
-                {/* Pass the ref to ScrollView */}
-                <ScrollView ref={scrollViewRef}>
-                  {lbCities.map((city) => (
-                    <TouchableOpacity
-                      style={styles.cityItem}
-                      onPress={() => handleCityChange(city.city)}
-                    >
-                      <Text style={styles.countryText}>{city.city}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-              </View>
-            </View>
-          </Modal>
+          <TouchableOpacity style={styles.uploadButton} onPress={handlePickId}>
+            <Text style={styles.uploadButtonText}>Upload ID as pdf</Text>
+          </TouchableOpacity>
         </View>
+
+      
 
         <View style={styles.agreementContainer}>
           <TouchableOpacity
@@ -328,9 +423,9 @@ const RegisterScreen = () => {
         </View>
 
         <TouchableOpacity
-          style={styles.registerButton}
-          onPress={handleRegister}>
-          <Text style={styles.registerButtonText}>Register</Text>
+          style={styles.applyButton}
+          onPress={logRegister}>
+          <Text style={styles.applyButtonText}>Apply</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -339,11 +434,17 @@ const RegisterScreen = () => {
 
 const styles = StyleSheet.create({
     container: {
-      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 200,
+      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 20 ,
       flexGrow: 1,
       alignItems: 'center',
       backgroundColor: '#fff',
       paddingVertical: 20,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 20,
+      color: '#3274cb',
     },
     backContainer: {
       position: 'absolute',
@@ -358,12 +459,6 @@ const styles = StyleSheet.create({
       height: 40,
       justifyContent: 'center',
       alignItems: 'center',
-    },
-    title: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginBottom: 20,
-      color: '#3274cb',
     },
     form: {
       width: '80%',
@@ -427,14 +522,14 @@ const styles = StyleSheet.create({
     agreementText: {
       color: '#666',
     },
-    registerButton: {
+    applyButton: {
       backgroundColor: '#3274cb',
       paddingVertical: 10,
       borderRadius: 5,
       alignItems: 'center',
       justifyContent: 'center',
     },
-    registerButtonText: {
+    applyButtonText: {
       color: '#fff',
       fontSize: 18,
       fontWeight: 'bold',
@@ -479,7 +574,7 @@ const styles = StyleSheet.create({
       alignItems: 'center', // Vertically align text in the middle
     },
     agreementText: {
-      // Your styles for the main text here
+      
     },
     linkText: {
       color: 'blue', // Change to your desired link color
@@ -488,14 +583,18 @@ const styles = StyleSheet.create({
     urlText: {
       marginTop: 10, // Add margin to separate URL from text
     },
-    passwordContainer: {
-      flexDirection: 'row', // Make sure the text input and icon are in a row
-      width: '100%', // Take up full width of the container
-      paddingHorizontal: 16, // Add horizontal padding for spacing
+    countryContainer: {
+      marginVertical: 10,
+      marginHorizontal: 20,
     },
-    eyeIconContainer: {
-      marginLeft: 10,
-      justifyContent: 'center',
+    button: {
+      backgroundColor: '#ebebeb',
+      borderRadius: 5,
+      padding: 10,
+      alignItems: 'center',
+    },
+    buttonText: {
+      fontSize: 16,
     },
     modalContainer: {
       flex: 1,
@@ -510,59 +609,36 @@ const styles = StyleSheet.create({
       minWidth: 200,
       maxWidth: 300,
     },
-    cityItem: {
+    countryItem: {
       paddingVertical: 10,
     },
-    cityText: {
+    countryText: {
       fontSize: 16,
     },
-    cityContainer: {
-      marginVertical: 10,
-      marginHorizontal: 20,
+    uploadContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginHorizontal: 16,
     },
-    button: {
-      backgroundColor: '#ebebeb',
-      borderRadius: 5,
-      padding: 10,
+    uploadButton: {
+      width: 100,
+      height: 100,
+      backgroundColor: '#3274cb',
+      borderRadius: 8,
+      marginHorizontal: 5,
+      justifyContent: 'center',
       alignItems: 'center',
     },
-  });
-
-  const styles2 = StyleSheet.create({
-    //styles for password input
-    passwordContainer: {
-      flexDirection: 'row', // Make sure the text input and icon are in a row
-      alignItems: 'center', // Align items vertically in the center
-      width: '100%', // Take up full width of the container
-      paddingHorizontal: 0, // Add horizontal padding for spacing
-    },
-    input: {
-      flex: 1, // Take up remaining space in the row
-      height: 50, // Set desired height for the text input
-      borderColor: 'black',
-      borderWidth: 1,
-      borderRadius: 5,
-      paddingHorizontal: 10, // Add horizontal padding for spacing
-      ///
-      borderColor: '#ccc',
-      borderRadius: 5,
-      marginBottom: 10,
-    },
-    inputError: {
-      borderColor: 'red', // Update border color for invalid password
-    },
-    eyeIconContainer: {
-      marginLeft: 10, // Add left margin for spacing between text input and icon
-      marginBottom: 10,
-    },
-    
-    buttonText: {
-      fontSize: 16,
+    uploadButtonText: {
+      color: 'white',
+      fontSize: 15,
+      fontWeight: 'bold',
+      textAlign: 'center',
     },
   });
   
-  
-  export default RegisterScreen;
+  export default ApplyAsTravelerScreen;
 
 
 

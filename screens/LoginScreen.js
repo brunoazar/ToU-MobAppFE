@@ -1,4 +1,7 @@
+import axios from '../api/axios';
+// import axios from '../src/api/axios';
 import React, { useState } from 'react';
+import { Platform, StatusBar, ScrollView} from 'react-native';
 import {
   View,
   Text,
@@ -6,9 +9,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  Linking,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import RegisterScreen from './RegisterScreen';
+import ApplyAsTravelerScreen from './ApplyAsTravelerScreen';
+import PasteLinkScreen from './ClientScreens/PasteLinkScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -17,46 +24,81 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   function navigateToRegister() {
+    setEmail('');
+    setPassword('');
       navigation.navigate("RegisterScreen");
   }
 
+  function navigateToApply() {
+    setEmail('');
+    setPassword('');
+    navigation.navigate("ApplyAsTravelerScreen");
+}
+
   ////
   const handleLogin = async () => {
+    console.log("We are here");
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       Alert.alert('Invalid Email', 'Please enter a valid email address.');
       return;
     }
-  
-    try {
-      const response = await fetch('https://example.com/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to login');
+    // validate password
+    if(!password){
+      Alert.alert('Invalid Password', 'Please enter a password.');
+      return;
+    }
+
+    try{
+      console.log("We are here 2");
+      const res = await axios.post('/login',//post request
+      JSON.stringify({email: email, password: password}),//include email and password
+      {
+        headers: { 'Content-Type': 'application/json' }
       }
-  
-      // TODO: handle successful login
-    } catch (error) {
-      console.log(error);
-      // TODO: handle login error
+      );
+      console.log(res.data);//for you to check what the server is responding with
+
+      //send user to corresponding page
+      checkLogin(res.status, res.data.type, res);
+
+    }catch(err){
+
+      console.log(err);
+    }
+
+  };
+
+  const checkLogin = (responseCode, userType, result) => {
+    // Handle login logic here
+    if(responseCode == 200){
+      Alert.alert('Login Successful');
+      AsyncStorage.setItem("AccessToken", result.data.token);
+      if(userType == 'Traveler' || userType == 'traveler'){
+        setPassword('');
+        navigation.navigate("TravelerMainScreen");
+      }
+      else{
+        setPassword('');
+        navigation.navigate("PasteLinkScreen");
+      }
+    }
+    else if(responseCode == 403){
+      Alert.alert('Account Blocked', 'Too many failed login attempts.');
+    }
+    else{
+      Alert.alert('Login Failed', 'Incorrect email or password.');
     }
   };
   
-  ////
+  
+
   const handlePress = () => {
-    Linking.openURL('https://example.com/forgot-password');
+    // handles the forgot password button
+    navigation.navigate("ForgotPasswordScreen")
   };
-  ////
+  
 
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -68,7 +110,7 @@ const LoginScreen = () => {
   ///
 
   const handleApply = () => {
-    // TODO: implement apply logic
+    navigateToApply()
   };
 
   const handleSignUp = () => {
@@ -76,7 +118,7 @@ const LoginScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <Text style={styles.heading}>Login</Text>
       </View>
@@ -86,6 +128,7 @@ const LoginScreen = () => {
           placeholder="Email"
           value={email}
           onChangeText={(text) => setEmail(text)}
+          maxLength={50}
         />
         <TextInput
           style={styles.input}
@@ -93,6 +136,7 @@ const LoginScreen = () => {
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
+          maxLength={50}
         />
         <TouchableOpacity
           style={[
@@ -117,12 +161,13 @@ const LoginScreen = () => {
           <Text style={styles.applyText}>Apply as a Traveler</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 20 ,
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',

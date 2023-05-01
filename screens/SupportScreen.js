@@ -29,8 +29,10 @@ const SupportScreen = ({navigation}) => {
     // send inquiry logic here
     try {
       const token = await AsyncStorage.getItem('AccessToken');
-      const res = await axios.post('/support',
-        JSON.stringify({message: inquiry, subject: problemType}),
+      if(problemType=='problem1'){
+        const problem='The app is crashing'
+        const res = await axios.post('/support',
+        JSON.stringify({message: inquiry, subject: problem}),
         {
           headers: {
             'Content-Type': 'application/json',
@@ -40,6 +42,35 @@ const SupportScreen = ({navigation}) => {
       await AsyncStorage.setItem("AccessToken", res.data.token);
       console.log("very nice")
       navigation.navigate('PasteLinkScreen')
+      }
+      else if(problemType=='problem2'){
+        const problem='I am unable to log in to my account'
+        const res = await axios.post('/support',
+        JSON.stringify({message: inquiry, subject: problem}),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`}
+        }
+      );
+      await AsyncStorage.setItem("AccessToken", res.data.token);
+      console.log("very nice")
+      navigation.navigate('PasteLinkScreen')
+      }
+      else{
+        const problem='I am not receiving any notifications'
+        const res = await axios.post('/support',
+        JSON.stringify({message: inquiry, subject: problem}),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`}
+        }
+      );
+      await AsyncStorage.setItem("AccessToken", res.data.token);
+      console.log("very nice")
+      navigation.navigate('PasteLinkScreen')
+      }
     }
     catch (err) {
       if(err.status == 401){

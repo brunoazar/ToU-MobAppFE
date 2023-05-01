@@ -62,9 +62,11 @@ const PendingProductCard = ({ product }) => {
       }
       );
       await AsyncStorage.setItem("AccessToken", res.data.token);
+      console.log(res)
     }
     catch(err){
       if(err.status == 401){
+        console.log(err)
         await AsyncStorage.removeItem('AccessToken');
         navigation.reset({
           index: 0,

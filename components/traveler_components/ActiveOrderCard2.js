@@ -123,7 +123,16 @@ const ActiveOrderCard = ({ product }) => {
           await AsyncStorage.setItem('AccessToken', res.data.token);
         }
         catch(err){
-          console.log(err);
+          if(err.status == 401){
+            await AsyncStorage.removeItem('AccessToken');
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'LoginScreen' }],
+            })
+          }
+          else{
+            await AsyncStorage.setItem('AccessToken', err.response.data.token);
+          }
         }
       // Backend call to mark order as arrived to Lebanon
       // Update the order status in the database through the API
@@ -159,7 +168,16 @@ const ActiveOrderCard = ({ product }) => {
           await AsyncStorage.setItem('AccessToken', res.data.token);
         }
         catch(err){
-          console.log(err);
+          if(err.status == 401){
+            await AsyncStorage.removeItem('AccessToken');
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'LoginScreen' }],
+            })
+          }
+          else{
+            await AsyncStorage.setItem('AccessToken', err.response.data.token);
+          }
         }
       }
     },
@@ -236,7 +254,16 @@ const ActiveOrderCard = ({ product }) => {
       console.log(res.data)
       }
     catch(err){
-      console.log(err);
+      if(err.status == 401){
+        await AsyncStorage.removeItem('AccessToken');
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'LoginScreen' }],
+        })
+      }
+      else{
+        await AsyncStorage.setItem('AccessToken', err.response.data.token);
+      }
     }
   }
 

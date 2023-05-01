@@ -36,7 +36,16 @@ const PendingOrdersScreen = ({ navigation }) => {
 
     }catch(err){
 
-      console.log(err);
+      if(err.status == 401){
+        await AsyncStorage.removeItem('AccessToken');
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'LoginScreen' }],
+        })
+      }
+      else{
+        await AsyncStorage.setItem('AccessToken', err.response.data.token);
+      }
     }
   }
 

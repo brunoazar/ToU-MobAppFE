@@ -47,7 +47,16 @@ const TravelerMainScreen = ({navigation}) => {
       setHasTicket(res.data.hasTicket);
     }
     catch(err){
-      console.log(err)
+      if(err.status == 401){
+        await AsyncStorage.removeItem('AccessToken');
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'LoginScreen' }],
+        })
+      }
+      else{
+        await AsyncStorage.setItem('AccessToken', err.response.data.token);
+      }
     }
     };
 
@@ -105,8 +114,16 @@ const TravelerMainScreen = ({navigation}) => {
         handleTravelerView();
   
       }catch(err){
-  
-        console.log(err);
+        if(err.status == 401){
+          await AsyncStorage.removeItem('AccessToken');
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'LoginScreen' }],
+          })
+        }
+        else{
+          await AsyncStorage.setItem('AccessToken', err.response.data.token);
+        }
       }
     };
 
@@ -171,7 +188,16 @@ const TravelerMainScreen = ({navigation}) => {
           await AsyncStorage.setItem("AccessToken", res.data.token);
         }
         catch(err){
-            console.log(err);
+          if(err.status == 401){
+            await AsyncStorage.removeItem('AccessToken');
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'LoginScreen' }],
+            })
+          }
+          else{
+            await AsyncStorage.setItem('AccessToken', err.response.data.token);
+          }
         }
     };
 

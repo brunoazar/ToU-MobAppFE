@@ -42,7 +42,16 @@ const [city, setCity] = useState(null);
                       nationality: res.data.client.nationality});
     }
     catch(err){
-      console.log(err)
+      if(err.status == 401){
+        await AsyncStorage.removeItem('AccessToken');
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'LoginScreen' }],
+        })
+      }
+      else{
+        await AsyncStorage.setItem('AccessToken', err.response.data.token);
+      }
     }
 }
 
@@ -100,16 +109,19 @@ useEffect(() => {
             }
             );
             console.log(res)
-        }
-          catch(err){
-            console.log(err)
-          }
-          await AsyncStorage.removeItem('AccessToken');
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'LoginScreen' }],
+            await AsyncStorage.removeItem('AccessToken');
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'LoginScreen' }],
           });
-          // Perform API call to logout
+        }
+        catch(err){
+            await AsyncStorage.removeItem('AccessToken');
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'LoginScreen' }],
+            })
+          }
         },
       },
     ]);
@@ -132,7 +144,16 @@ useEffect(() => {
         await AsyncStorage.setItem("AccessToken", res.data.token);
       }
       catch(err){
-        console.log(err)
+        if(err.status == 401){
+          await AsyncStorage.removeItem('AccessToken');
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'LoginScreen' }],
+          })
+        }
+        else{
+          await AsyncStorage.setItem('AccessToken', err.response.data.token);
+        }
       }
 
       setIsChangesSaved(true);

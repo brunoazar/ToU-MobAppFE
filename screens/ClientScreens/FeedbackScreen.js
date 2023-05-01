@@ -49,8 +49,16 @@ const FeedbackScreen = ({ navigation }) => {
       console.log(res.data);//for you to check what the server is responding with
       navigation.navigate('PasteLinkScreen');
     }catch(err){
-
-      console.log(err);
+      if(err.status == 401){
+        await AsyncStorage.removeItem('AccessToken');
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'LoginScreen' }],
+        })
+      }
+      else{
+        await AsyncStorage.setItem('AccessToken', err.response.data.token);
+      }
     }
 
     

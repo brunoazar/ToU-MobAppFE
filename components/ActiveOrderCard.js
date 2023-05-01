@@ -32,7 +32,16 @@ const ActiveOrderCard = ({ navigation, product}) => {
       navigation.navigate('FeedbackScreen', { orderID: product.id});
     }
     catch(err){
-      console.log(err);
+      if(err.response.status == 401){
+        await AsyncStorage.removeItem('AccessToken');
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'LoginScreen' }],
+        });
+      }
+      else{
+        await AsyncStorage.setItem("AccessToken", err.response.data.token);
+      }
     }
     // Update the order status in the database through the API
 
